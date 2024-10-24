@@ -54,7 +54,7 @@ jobs:
           yarn build:static
           cd ..
           cd irius-eth
-          yarn build
+          yarn build:static
           cd ..
       - name: Copy config
         run: |
