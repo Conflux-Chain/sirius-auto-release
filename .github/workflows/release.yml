@@ -71,7 +71,7 @@ jobs:
             github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: "refs/tags/${{ steps.release_info.outputs.tag_name }}",
+            ref: "refs/tags/${{ needs.prepare.outputs.release_name }}",
             sha: context.sha
             })
       - name: Zip artifacts
