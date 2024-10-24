@@ -36,3 +36,5 @@ server {
 }
 
 ```
+
+Note: Conflux core space and Conflux eSpace have different backend interfaces, so when configuring, it is necessary to use front-end interfaces and backend interfaces that match each other.
