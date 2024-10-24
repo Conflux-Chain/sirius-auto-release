@@ -71,7 +71,7 @@ jobs:
             github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: "refs/tags/${{ needs.prepare.outputs.release_name }}",
+            ref: "refs/tags/${{ needs.prepars.outputs.tag_name }}",
             sha: context.sha
             })
       - name: Zip artifacts
@@ -81,7 +81,7 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
-          name: ${{ needs.prepare.outputs.release_name }}
+          name: ${{ needs.prepare.outputs.tag_name }}
           files: |
             sirius.zip
             sirius-eth.zip
