@@ -8,6 +8,7 @@ on:
       - "v*"
   schedule:
     - cron: "30 0 * * 1" # At 00:30 on Monday.
+  workflow_dispatch:
 
 jobs:
   prepars:
