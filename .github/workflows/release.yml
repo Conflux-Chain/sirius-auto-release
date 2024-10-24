@@ -81,8 +81,8 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
-          name: ${{ needs.prepare.outputs.tag_name }}
-          tag_name: ${{ needs.prepare.outputs.tag_name }}
+          name: ${{ needs.prepars.outputs.tag_name  }}
+          tag_name: ${{ needs.prepars.outputs.tag_name  }}
           files: |
             sirius.zip
             sirius-eth.zip
