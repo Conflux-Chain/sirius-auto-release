@@ -1,0 +1,86 @@
+name: release
+
+permissions:
+  contents: write
+on:
+  push:
+    tags:
+      - "v*"
+  schedule:
+    - cron: "30 0 * * 1" # At 00:30 on Monday.
+
+jobs:
+  prepars:
+    name: prepars
+    runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.release_info.outputs.tag_name }}
+    steps:
+      - id: release_info
+        run: |
+          echo "tag_name=$(date +"%Y-%m-%d-%H-%M")"
+  build:
+    needs: [prepars]
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: "Conflux-Chain/sirius"
+          path: sirius
+          ref: dev
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: "Conflux-Chain/sirius-eth"
+          path: irius-eth
+          ref: dev
+      - name: Install dependencies
+        run: |
+          cd sirius
+          yarn
+          cd ..
+          cd irius-eth
+          yarn
+          cd ..
+      - name: Build
+        run: |
+          cd sirius
+          yarn build
+          cd ..
+          cd irius-eth
+          yarn build
+          cd ..
+      - name: Copy config
+        run: |
+          cd sirius
+          cp ./config.example ./build/config.json
+          cd ..
+          cd irius-eth
+          cp ./config.example ./build/config.json
+          cd ..
+      - name: Create build tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: "refs/tags/${{ steps.release_info.outputs.tag_name }}",
+            sha: context.sha
+            })
+      - name: Zip artifacts
+        run: |
+          zip -r sirius.zip ./sirius/build
+          zip -r sirius-eth.zip ./irius-eth/build
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ needs.prepare.outputs.release_name }}
+          files: |
+            sirius.zip
+            sirius-eth.zip
