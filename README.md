@@ -10,7 +10,7 @@ You can use the pre-build assets you can download the static files of the build 
 
 ## Configure
 
-After downloading the compressed package and extracting it, you will find a `config.json file`. Simply modify the parameters within it according to your needs.
+After downloading the compressed package and extracting it, you will find a `config.json` file. Simply modify the parameters within it according to your needs.
 
 1. sirius (conflux core space)
 
@@ -48,6 +48,102 @@ After downloading the compressed package and extracting it, you will find a `con
 }
 
 ```
+
+2. sirius-eth (conflux eSpace)
+
+```js
+{
+    // conflux eSpace open api url
+    "ENV_API_HOST": "https://evmapi.confluxscan.net",
+    // conflux core space open api url
+    "ENV_CORE_API_HOST": "https://api.confluxscan.net",
+    // conflux scan backend url
+    "ENV_CORE_SCAN_HOST": "https://www.confluxscan.net",
+    // eSpace rpc url
+    "ENV_RPC_SERVER": "https://evm-cfxbridge.confluxrpc.com",
+
+    // network config
+    "ENV_NETWORK_ID": 1030,
+    // keep the default value
+    "ENV_NETWORK_TYPE": "EVM",
+    // MAINNET or TESTNET or DEVNET
+    "ENV_CHAIN_TYPE": "MAINNET",
+
+    // this config is control add network to wallet
+    "ENV_WALLET_CONFIG": {
+        "chainId": 1030,
+        "chainName": "Conflux eSpace",
+        "rpcUrls": [
+            "https://evm.confluxrpc.com"
+        ],
+        "blockExplorerUrls": [
+            "https://evm.confluxscan.io/"
+        ],
+        "nativeCurrency": {
+            "name": "Conflux",
+            "symbol": "CFX",
+            "decimals": 18
+        }
+    },
+    // logo url
+    "ENV_LOGO": "https://evm.confluxscan.net/static/media/logo.8e57dceb.svg",
+
+    // theme
+    "ENV_THEME": {
+        "primary": "#17B38A",
+        "antdPrimaryButtonBg": "#7789D3",
+        "buttonBg": "rgba(0, 84, 254, 0.8)",
+        "outlineColor": "#7789D3",
+        "shadowColor": "rgba(30, 61, 228, 0.2)",
+        "searchButtonBg": "#AFE9D2",
+        "searchButtonHoverBg": "#17B38A",
+        "gasPriceLineBg": "#F0F4F3",
+        "footerBg": "#05343F",
+        "footerHighLightColor": "#AFE9D2",
+        "linkColor": "#1e3de4",
+        "linkHoverColor": "#0f23bd",
+        "chartColors": [
+            "#7cb5ec",
+            "#434348",
+            "#f7a35c",
+            "#2b908f",
+            "#91e8e1",
+            "#90ed7d",
+            "#8085e9",
+            "#f15c80",
+            "#e4d354",
+            "#f45b5b"
+        ],
+        "mixedChartColors": [
+            "#7cb5ec",
+            "#90ed7d",
+            "#434348"
+        ],
+        "pieChartColors": [
+            "#7cb5ec",
+            "#434348",
+            "#f7a35c",
+            "#2b908f",
+            "#91e8e1",
+            "#90ed7d",
+            "#8085e9",
+            "#f15c80",
+            "#e4d354",
+            "#f45b5b"
+        ],
+        "chartTitleColor": "#7789D3",
+        "chartDetailLinkColor": "#1e3de4"
+    },
+    "ENV_ICONS": {
+        "imgArrow": "/static/media/arrow.4e79d439.svg"
+    },
+    "ENV_LOCALES_EN": {},
+    "ENV_LOCALES_CN": {}
+}
+
+```
+
+Note: config.json is json format it not support comment, you need remove the comment.
 
 ## Nginx example
 
