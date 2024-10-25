@@ -8,6 +8,10 @@ This project is to automatically build conflux core space and eSpace scan, and y
 
 You can download the pre-build assets from [release](https://github.com/Conflux-Chain/scan-auto-release/releases) page, `scan.zip` is Conflux core space and `scan-eth.zip` is Conflux eSpace
 
+## Use Docker
+
+You can clone this repository and run `docker compose up -d --build`, Then you can modify the `scan_eth.conf` `scan.conf` `docker-compose.yml` to your needs and
+
 ## Configure
 
 After downloading the compressed package and extracting it, you will find a `config.json` file. Simply modify the parameters within it according to your needs.
