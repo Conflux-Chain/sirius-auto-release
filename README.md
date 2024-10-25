@@ -10,7 +10,11 @@ You can download the pre-build assets from [release](https://github.com/Conflux-
 
 ## Use Docker
 
-You can clone this repository and run `docker compose up -d --build`, Then you can modify the `scan_eth.conf` `scan.conf` `docker-compose.yml` to your needs.
+You can clone this repository and run `docker compose up -d --build`. After that, you can modify `scan_eth.conf`, `scan.conf`, and `docker-compose.yml` as needed. Then, use `docker compose restart` to apply the changes.
+
+In Docker Compose, volumes are used to map resource files into the container (if the directory is empty, files from the container will be copied there). Therefore, you can directly modify the `config.json` in the directory and then restart the service.
+
+
 
 ## Configure
 
