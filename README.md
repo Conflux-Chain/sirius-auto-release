@@ -10,7 +10,7 @@ You can download the pre-build assets from [release](https://github.com/Conflux-
 
 ## Use Docker
 
-You can clone this repository and run `docker compose up -d --build`, Then you can modify the `scan_eth.conf` `scan.conf` `docker-compose.yml` to your needs and
+You can clone this repository and run `docker compose up -d --build`, Then you can modify the `scan_eth.conf` `scan.conf` `docker-compose.yml` to your needs.
 
 ## Configure
 
