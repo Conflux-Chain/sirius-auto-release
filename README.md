@@ -6,7 +6,7 @@ This project is to automatically build conflux cSpace and eSpace scan, and you c
 
 ## Use Pre-build assets
 
-You can use the pre-build assets you can download the static files of the build from the [release](https://github.com/Conflux-Chain/sirius-auto-release/releases) page, `sirius.zip` is Conflux core space and `sirius-eth.zip` is Conflux eSpace
+You can download the pre-build assets from [release](https://github.com/Conflux-Chain/sirius-auto-release/releases) page, `sirius.zip` is Conflux core space and `sirius-eth.zip` is Conflux eSpace
 
 ## Configure
 
@@ -158,13 +158,13 @@ server {
             try_files $uri $uri/ /index.html;
     }
     location /v1/ {
-        proxy_pass <your conflux san backend>/v1/;
+        proxy_pass <your conflux scan backend URL>/v1/;
     }
     location /stat/ {
-        proxy_pass <your conflux san backend>/stat/;
+        proxy_pass <your conflux scan backend URL>/stat/;
     }
     location /rpcv2/ {
-        proxy_pass <your conflux san backend>/rpcv2/;
+        proxy_pass <your conflux scan backend URL>/rpcv2/;
     }
 }
 
