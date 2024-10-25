@@ -6,13 +6,18 @@ This project is to automatically build conflux cSpace and eSpace scan, and you c
 
 ## Use Pre-build assets
 
-You can download the pre-build assets from [release](https://github.com/Conflux-Chain/sirius-auto-release/releases) page, `sirius.zip` is Conflux core space and `sirius-eth.zip` is Conflux eSpace
+You can download the pre-build assets from [release](https://github.com/Conflux-Chain/scan-auto-release/releases) page, `scan.zip` is Conflux core space and `scan-eth.zip` is Conflux eSpace
 
 ## Configure
 
 After downloading the compressed package and extracting it, you will find a `config.json` file. Simply modify the parameters within it according to your needs.
 
-1. sirius (conflux core space)
+```bash
+# unzip scan.zip  or unzip scan-eth.zip
+vim ./build/config.json
+```
+
+1. scan (conflux core space)
 
 ```js
 {
@@ -49,7 +54,7 @@ After downloading the compressed package and extracting it, you will find a `con
 
 ```
 
-2. sirius-eth (conflux eSpace)
+2. scan-eth (conflux eSpace)
 
 ```js
 {
