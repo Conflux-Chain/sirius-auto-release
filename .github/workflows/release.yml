@@ -76,13 +76,13 @@ jobs:
             })
       - name: Zip artifacts
         run: |
-          zip -r sirius.zip ./sirius/build
-          zip -r sirius-eth.zip ./irius-eth/build
+          mv ./sirius/build ./build && zip -r scan.zip ./build && rm -rf ./build
+          mv ./irius-eth/build ./build && zip -r scan-eth.zip ./build && rm -rf ./build
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           name: ${{ needs.prepars.outputs.tag_name  }}
           tag_name: ${{ needs.prepars.outputs.tag_name  }}
           files: |
-            sirius.zip
-            sirius-eth.zip
+            scan.zip
+            scan-eth.zip
