@@ -1,0 +1,12 @@
+services:
+  scan:
+    build: .
+    ports:
+      - 3000:3000
+      - 3001:3001
+    volumes:
+      - ./scan:/data/scan
+      - ./scan-eth:/data/scan-eth
+      - ./scan.conf:/etc/nginx/conf.d/scan.conf
+      - ./scan_eth.conf:/etc/nginx/conf.d/scan_eth.conf
+    restart: always
