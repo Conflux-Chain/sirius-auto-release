@@ -77,7 +77,7 @@ jobs:
       - name: Zip artifacts
         run: |
           mv ./sirius/build ./build && zip -r scan.zip ./build && rm -rf ./build
-          mv ./irius-eth/build ./build && zip -r scan-eth.zip ./build && rm -rf ./build
+          mv ./sirius-eth/build ./build && zip -r scan-eth.zip ./build && rm -rf ./build
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
