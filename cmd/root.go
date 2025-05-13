@@ -4,6 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"Conflux-Chain/sirius-auto-release/internal/config"
 	"fmt"
 	"os"
 
@@ -19,7 +20,13 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if configFile != "" {
-			fmt.Printf("Using config file: %s\n", configFile)
+			cfg, err := config.LoadConfig(configFile)
+			if err != nil {
+				fmt.Println("Error loading config file:", err)
+			}
+
+			fmt.Println("Config loaded successfully:")
+			fmt.Printf("Version: %d\n", cfg.Version)
 		} else {
 			fmt.Println("No config file provided, using default settings.")
 		}
