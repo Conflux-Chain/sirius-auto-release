@@ -5,7 +5,9 @@ package cmd
 
 import (
 	"Conflux-Chain/sirius-auto-release/internal/config"
+	"Conflux-Chain/sirius-auto-release/internal/runner"
 	"fmt"
+	"log/slog"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -13,24 +15,49 @@ import (
 
 var configFile string
 
+var debugMode bool
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "sirius",
 	Short: "Run the Sirius application",
 	Run: func(cmd *cobra.Command, args []string) {
+		logLevel := slog.LevelInfo
+		if debugMode {
+			logLevel = slog.LevelDebug
+		}
+
+		opts := &slog.HandlerOptions{
+			Level: logLevel,
+		}
+
+		handler := slog.NewTextHandler(os.Stderr, opts)
+
+		logger := slog.New(handler)
+
+		slog.SetDefault(logger)
+		slog.Debug("Sirius application started")
 
 		if configFile != "" {
 			cfg, err := config.LoadConfig(configFile)
 			if err != nil {
-				fmt.Println("Error loading config file:", err)
+				slog.Error("Failed to load config file", "error", err)
+				fmt.Printf("Error: Could not load config file: %v\n", err)
+				return
 			}
 
-			fmt.Println("Config loaded successfully:")
-			fmt.Printf("Version: %d\n", cfg.Version)
+			slog.Debug("Config loaded successfully", "version", cfg.Global.Version, "workdir", cfg.Global.Workdir)
+
+			if err := runner.RunScript(&cfg); err != nil {
+				slog.Error("Error running script", "error", err)
+				fmt.Printf("Error: %v\n", err)
+				return
+			}
+
 		} else {
 			fmt.Println("No config file provided, using default settings.")
 		}
-
+		fmt.Println("✓ All tasks completed successfully!")
 	},
 }
 
@@ -43,4 +70,6 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().StringVarP(&configFile, "config", "c", "", "Path to the configuration file")
+
+	rootCmd.Flags().BoolVarP(&debugMode, "debug", "d", false, "Enable debug mode")
 }
