@@ -14,6 +14,7 @@ type Global struct {
 
 type Frontend struct {
 	Type          string `mapstructure:"type"`
+	Space         string `mapstructure:"space"`
 	SiriusRepo    string `mapstructure:"sirius_repo"`
 	SiriusEthRepo string `mapstructure:"sirius_eth_repo"`
 	PrebuiltRepo  string `mapstructure:"prebuilt_repo"`

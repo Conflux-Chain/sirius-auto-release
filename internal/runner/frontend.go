@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"slices"
 	"strings"
 	"time"
 )
@@ -100,21 +101,35 @@ func RunFrontendScript(frontendConfig *config.Frontend, globalConfig *config.Glo
 				return fmt.Errorf("failed to create temp dir: %v", err)
 			}
 
-			for _, asset := range release.Assets {
-				if strings.Contains(asset.Name, "scan") {
-					fmt.Printf("Downloading release %s... (this may take a while)\n", asset.Name)
+			var asset GitHubReleaseAsset
 
-					outPath := path.Join(tempDir, asset.Name)
-
-					if err := utils.DownloadFile(asset.BrowserDownloadURL, outPath); err != nil {
-						return fmt.Errorf("failed to download file: %v", err)
-					}
-					name := strings.TrimSuffix(asset.Name, ".zip")
-					utils.Unzip(outPath, path.Join(globalConfig.Workdir, name))
-					fmt.Printf("Preparing frontend in %s\n", path.Join(globalConfig.Workdir, name))
-				}
-
+			var assetName string
+			if frontendConfig.Space == "eSpace" {
+				assetName = "scan-eth.zip"
+			} else if frontendConfig.Space == "coreSpace" {
+				assetName = "scan.zip"
+			} else {
+				return fmt.Errorf("unknown space: %s", frontendConfig.Space)
 			}
+
+			idx := slices.IndexFunc(release.Assets, func(asset GitHubReleaseAsset) bool {
+				return asset.Name == assetName
+			})
+			if idx == -1 {
+				return fmt.Errorf("failed to find asset: %s", assetName)
+			}
+			asset = release.Assets[idx]
+
+			fmt.Printf("Downloading release %s... (this may take a while)\n", asset.Name)
+
+			outPath := path.Join(tempDir, asset.Name)
+
+			if err := utils.DownloadFile(asset.BrowserDownloadURL, outPath); err != nil {
+				return fmt.Errorf("failed to download file: %v", err)
+			}
+			name := strings.TrimSuffix(asset.Name, ".zip")
+			utils.Unzip(outPath, path.Join(globalConfig.Workdir, name))
+			fmt.Printf("Preparing frontend in %s\n", path.Join(globalConfig.Workdir, name))
 
 			// cleanup
 			defer func() {
