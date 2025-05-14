@@ -19,12 +19,13 @@ type Frontend struct {
 	PrebuiltRepo  string `mapstructure:"prebuilt_repo"`
 }
 
-type Docker struct {
-	Enabled bool `mapstructure:"enabled"`
-}
-
 type Proxy struct {
 	Enabled bool   `mapstructure:"enabled"`
 	Type    string `mapstructure:"type"`
 	Port    int    `mapstructure:"port"`
+	API_URL string `mapstructure:"api_url"`
+}
+
+type Docker struct {
+	Enabled bool `mapstructure:"enabled"`
 }
