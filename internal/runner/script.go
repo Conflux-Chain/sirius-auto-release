@@ -5,15 +5,9 @@ import (
 	"log/slog"
 )
 
-func RunDockerScript() error {
-	// TODO
-	return nil
-}
-
 func RunScript(config *config.Config) error {
 
 	slog.Debug("Starting script execution")
-	// frontend
 	if err := RunFrontendScript(&config.Frontend, &config.Global); err != nil {
 		return err
 	}
@@ -24,8 +18,8 @@ func RunScript(config *config.Config) error {
 		}
 	}
 
-	if config.Docker.Enabled {
-		if err := RunDockerScript(); err != nil {
+	if config.Container.Enabled {
+		if err := RunContainerScript(&config.Container, &config.Global); err != nil {
 			return err
 		}
 	}
