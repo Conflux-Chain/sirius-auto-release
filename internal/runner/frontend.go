@@ -131,6 +131,12 @@ func RunFrontendScript(frontendConfig *config.Frontend, globalConfig *config.Glo
 			utils.Unzip(outPath, filepath.Join(globalConfig.Workdir, name))
 			fmt.Printf("Preparing frontend in %s\n", filepath.Join(globalConfig.Workdir, name))
 
+			// move frontend to workdir
+			if _, err := os.Stat(filepath.Join(globalConfig.Workdir, "build")); err == nil {
+				os.RemoveAll(filepath.Join(globalConfig.Workdir, "build"))
+
+			}
+
 			// move build to workdir
 			if err := os.Rename(filepath.Join(globalConfig.Workdir, name, "build"), filepath.Join(globalConfig.Workdir, "build")); err != nil {
 				return fmt.Errorf("failed to move build: %v", err)

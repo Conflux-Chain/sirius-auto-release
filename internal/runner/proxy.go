@@ -6,11 +6,13 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"net/url"
 	"path/filepath"
 )
 
 type NginxTemplateData struct {
-	APIURL string
+	APIURL   string
+	API_HOST string
 }
 
 func (d *NginxTemplateData) generateNginxConfig() ([]byte, error) {
@@ -42,10 +44,17 @@ func (d *NginxTemplateData) writeToFile(outPath string) error {
 	return nil
 }
 func RunProxyScript(proxyConfig *config.Proxy, globalConfig *config.Global) error {
+	parseURL, err := url.Parse(proxyConfig.API_URL)
+
+	if err != nil {
+		return fmt.Errorf("failed to parse URL: %v", err)
+	}
+
 	data := NginxTemplateData{
-		APIURL: proxyConfig.API_URL,
+		APIURL:   proxyConfig.API_URL,
+		API_HOST: parseURL.Hostname(),
 	}
 	output := filepath.Join(globalConfig.Workdir, "nginx.conf")
-	err := data.writeToFile(output)
-	return err
+
+	return data.writeToFile(output)
 }

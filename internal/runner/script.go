@@ -31,7 +31,7 @@ func RunScript(config *config.Config) error {
 			fmt.Println("Dockerfile generated successfully.")
 			fmt.Println("To build the Docker image, run:")
 			fmt.Print("\n\n")
-			fmt.Printf("cd %s && docker build -t %s:v1 . && docker run %s -p %d:3000 \n", config.Global.Workdir, config.Container.Name, config.Container.Name, config.Container.Port)
+			fmt.Printf("cd %s && docker build -t %s:%s . && docker run -p %d:3000  %s:%s \n", config.Global.Workdir, config.Container.Name, config.Container.Tag, config.Container.Port, config.Container.Name, config.Container.Tag)
 			fmt.Print("\n\n")
 		}
 

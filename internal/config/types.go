@@ -32,4 +32,5 @@ type Container struct {
 	Type    string `mapstructure:"type"`
 	Name    string `mapstructure:"name"`
 	Port    int    `mapstructure:"port"`
+	Tag     string `mapstructure:"tag"`
 }
