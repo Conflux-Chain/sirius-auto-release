@@ -11,7 +11,6 @@ import (
 
 type NginxTemplateData struct {
 	APIURL string
-	Port   int
 }
 
 func (d *NginxTemplateData) generateNginxConfig() ([]byte, error) {
@@ -45,7 +44,6 @@ func (d *NginxTemplateData) writeToFile(outPath string) error {
 func RunProxyScript(proxyConfig *config.Proxy, globalConfig *config.Global) error {
 	data := NginxTemplateData{
 		APIURL: proxyConfig.API_URL,
-		Port:   proxyConfig.Port,
 	}
 	output := path.Join(globalConfig.Workdir, "nginx.conf")
 	err := data.writeToFile(output)

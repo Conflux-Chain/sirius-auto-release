@@ -2,6 +2,7 @@ package runner
 
 import (
 	"Conflux-Chain/sirius-auto-release/internal/config"
+	"fmt"
 	"log/slog"
 )
 
@@ -24,6 +25,17 @@ func RunScript(config *config.Config) error {
 		}
 	}
 
-	slog.Debug("Script execution completed successfully")
+	// Print help message
+	if config.Container.Enabled {
+		if config.Container.Type == "docker" {
+			fmt.Println("Dockerfile generated successfully.")
+			fmt.Println("To build the Docker image, run:")
+			fmt.Print("\n\n")
+			fmt.Printf("cd %s && docker build -t %s:v1 . && docker run %s -p %d:3000 \n", config.Global.Workdir, config.Container.Name, config.Container.Name, config.Container.Port)
+			fmt.Print("\n\n")
+		}
+
+	}
+
 	return nil
 }

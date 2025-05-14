@@ -30,4 +30,5 @@ type Container struct {
 	Enabled bool   `mapstructure:"enabled"`
 	Type    string `mapstructure:"type"`
 	Name    string `mapstructure:"name"`
+	Port    int    `mapstructure:"port"`
 }
