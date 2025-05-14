@@ -1,11 +1,15 @@
 package runner
 
 import (
+	"Conflux-Chain/sirius-auto-release/internal/config"
+	"Conflux-Chain/sirius-auto-release/internal/utils"
 	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"net/url"
+	"os"
+	"path"
 	"strings"
 	"time"
 )
@@ -61,6 +65,8 @@ func (g *GitHub) GetLatestRelease() (GitHubRelease, error) {
 		return GitHubRelease{}, fmt.Errorf("failed to get latest release: %v", err)
 	}
 
+	defer resp.Body.Close()
+
 	if resp.StatusCode != http.StatusOK {
 		return GitHubRelease{}, fmt.Errorf("failed to get latest release: %s", resp.Status)
 	}
@@ -71,7 +77,59 @@ func (g *GitHub) GetLatestRelease() (GitHubRelease, error) {
 		return GitHubRelease{}, fmt.Errorf("failed to decode response: %v", err)
 	}
 
-	defer resp.Body.Close()
-
 	return releaseInfo, nil
+}
+
+func RunFrontendScript(frontendConfig *config.Frontend, globalConfig *config.Global) error {
+	switch frontendConfig.Type {
+	case "prebuilt":
+		{
+			githubRelease := GitHub{
+				RepoURL: frontendConfig.PrebuiltRepo,
+			}
+
+			// Get the latest release
+			release, err := githubRelease.GetLatestRelease()
+			if err != nil {
+				return fmt.Errorf("failed to get latest release: %v", err)
+			}
+			fmt.Printf("Latest prebuilt release: %s\n", release.TagName)
+
+			tempDir, err := os.MkdirTemp("", "sirius")
+			if err != nil {
+				return fmt.Errorf("failed to create temp dir: %v", err)
+			}
+
+			for _, asset := range release.Assets {
+				if strings.Contains(asset.Name, "scan") {
+					fmt.Printf("Downloading release %s... (this may take a while)\n", asset.Name)
+
+					outPath := path.Join(tempDir, asset.Name)
+
+					if err := utils.DownloadFile(asset.BrowserDownloadURL, outPath); err != nil {
+						return fmt.Errorf("failed to download file: %v", err)
+					}
+					name := strings.TrimSuffix(asset.Name, ".zip")
+					utils.Unzip(outPath, path.Join(globalConfig.Workdir, name))
+					fmt.Printf("Preparing frontend in %s\n", path.Join(globalConfig.Workdir, name))
+				}
+
+			}
+
+			// cleanup
+			defer func() {
+				slog.Debug("Removing temp dir", "path", tempDir)
+				if err := os.RemoveAll(tempDir); err != nil {
+					slog.Error("Failed to remove temp dir", "error", err)
+				}
+			}()
+
+		}
+	default:
+		{
+			return fmt.Errorf("unknown frontend type: %s", frontendConfig.Type)
+		}
+	}
+
+	return nil
 }
