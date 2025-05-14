@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"path"
+	"path/filepath"
 	"slices"
 	"strings"
 	"time"
@@ -122,14 +122,24 @@ func RunFrontendScript(frontendConfig *config.Frontend, globalConfig *config.Glo
 
 			fmt.Printf("Downloading release %s... (this may take a while)\n", asset.Name)
 
-			outPath := path.Join(tempDir, asset.Name)
+			outPath := filepath.Join(tempDir, asset.Name)
 
 			if err := utils.DownloadFile(asset.BrowserDownloadURL, outPath); err != nil {
 				return fmt.Errorf("failed to download file: %v", err)
 			}
 			name := strings.TrimSuffix(asset.Name, ".zip")
-			utils.Unzip(outPath, path.Join(globalConfig.Workdir, name))
-			fmt.Printf("Preparing frontend in %s\n", path.Join(globalConfig.Workdir, name))
+			utils.Unzip(outPath, filepath.Join(globalConfig.Workdir, name))
+			fmt.Printf("Preparing frontend in %s\n", filepath.Join(globalConfig.Workdir, name))
+
+			// move build to workdir
+			if err := os.Rename(filepath.Join(globalConfig.Workdir, name, "build"), filepath.Join(globalConfig.Workdir, "build")); err != nil {
+				return fmt.Errorf("failed to move build: %v", err)
+			}
+
+			// remove empty dir
+			if err := os.RemoveAll(filepath.Join(globalConfig.Workdir, name)); err != nil {
+				return fmt.Errorf("failed to remove dir: %v", err)
+			}
 
 			// cleanup
 			defer func() {

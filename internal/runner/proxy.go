@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
-	"path"
+	"path/filepath"
 )
 
 type NginxTemplateData struct {
@@ -45,7 +45,7 @@ func RunProxyScript(proxyConfig *config.Proxy, globalConfig *config.Global) erro
 	data := NginxTemplateData{
 		APIURL: proxyConfig.API_URL,
 	}
-	output := path.Join(globalConfig.Workdir, "nginx.conf")
+	output := filepath.Join(globalConfig.Workdir, "nginx.conf")
 	err := data.writeToFile(output)
 	return err
 }
