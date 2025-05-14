@@ -1,10 +1,10 @@
 package config
 
 type Config struct {
-	Global   Global   `mapstructure:"global"`
-	Frontend Frontend `mapstructure:"frontend"`
-	Docker   Docker   `mapstructure:"docker"`
-	Proxy    Proxy    `mapstructure:"proxy"`
+	Global    Global    `mapstructure:"global"`
+	Frontend  Frontend  `mapstructure:"frontend"`
+	Container Container `mapstructure:"container"`
+	Proxy     Proxy     `mapstructure:"proxy"`
 }
 
 type Global struct {
@@ -26,6 +26,8 @@ type Proxy struct {
 	API_URL string `mapstructure:"api_url"`
 }
 
-type Docker struct {
-	Enabled bool `mapstructure:"enabled"`
+type Container struct {
+	Enabled bool   `mapstructure:"enabled"`
+	Type    string `mapstructure:"type"`
+	Name    string `mapstructure:"name"`
 }

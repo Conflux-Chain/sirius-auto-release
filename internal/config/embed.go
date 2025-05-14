@@ -6,3 +6,7 @@ import (
 
 //go:embed nginx.conf
 var NginxTemplate string
+
+
+//go:embed dockerfile
+var DockerTemplate string
