@@ -39,9 +39,14 @@ func RunFrontendScript(frontendConfig *config.Frontend, globalConfig *config.Glo
 					if err := utils.DownloadFile(asset.BrowserDownloadURL, outPath); err != nil {
 						return fmt.Errorf("failed to download file: %v", err)
 					}
+					name := strings.TrimSuffix(asset.Name, ".zip")
+					utils.Unzip(outPath, path.Join(globalConfig.Workdir, name))
+					fmt.Printf("Preparing frontend in %s\n", path.Join(globalConfig.Workdir, name))
 				}
+
 			}
 
+			// cleanup
 			defer func() {
 				slog.Debug("Removing temp dir", "path", tempDir)
 				if err := os.RemoveAll(tempDir); err != nil {
@@ -49,8 +54,6 @@ func RunFrontendScript(frontendConfig *config.Frontend, globalConfig *config.Glo
 				}
 			}()
 
-			// TODO unzip the downloaded file to the workdir
-			fmt.Printf("Preparing frontend in %s\n", globalConfig.Workdir)
 		}
 	default:
 		{
