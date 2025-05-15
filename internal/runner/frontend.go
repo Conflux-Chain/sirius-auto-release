@@ -10,7 +10,6 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"slices"
 	"strings"
 	"time"
 )
@@ -81,86 +80,89 @@ func (g *GitHub) GetLatestRelease() (GitHubRelease, error) {
 	return releaseInfo, nil
 }
 
+func prebuilt(frontendConfig *config.Frontend, globalConfig *config.Global) error {
+
+	github := GitHub{
+		RepoURL: frontendConfig.PrebuiltRepo,
+	}
+
+	release, err := github.GetLatestRelease()
+	if err != nil {
+		return fmt.Errorf("failed to get latest release: %v", err)
+	}
+	fmt.Printf("Latest prebuilt release: %s\n", release.TagName)
+
+	tempDir, err := os.MkdirTemp("", "sirius")
+	if err != nil {
+		return fmt.Errorf("failed to create temp directory: %v", err)
+	}
+
+	defer func() {
+		slog.Debug("Removing temporary directory", "path", tempDir)
+		if err := os.RemoveAll(tempDir); err != nil {
+			slog.Error("Failed to remove temporary directory", "error", err)
+		}
+	}()
+
+	assetsToDownload := selectAssetsToDownload(globalConfig.Space, release.Assets)
+	if len(assetsToDownload) == 0 {
+		return fmt.Errorf("no matching assets found for space: %s", globalConfig.Space)
+	}
+
+	for _, asset := range assetsToDownload {
+		fmt.Printf("Downloading release %s... (this may take a while)\n", asset.Name)
+
+		downloadPath := filepath.Join(tempDir, asset.Name)
+		if err := utils.DownloadFile(asset.BrowserDownloadURL, downloadPath); err != nil {
+			return fmt.Errorf("failed to download file %s: %v", asset.Name, err)
+		}
+
+		extractName := strings.TrimSuffix(asset.Name, ".zip")
+		extractPath := filepath.Join(globalConfig.Workdir, extractName)
+		if err := utils.Unzip(downloadPath, extractPath); err != nil {
+			return fmt.Errorf("failed to extract %s: %v", asset.Name, err)
+		}
+
+		fmt.Printf("Frontend prepared in %s\n", extractPath)
+	}
+
+	return nil
+}
+
+// Helper function to select which assets to download based on space configuration
+func selectAssetsToDownload(space string, allAssets []GitHubReleaseAsset) []GitHubReleaseAsset {
+	if space == config.ALL_SPACE {
+		return allAssets
+	}
+
+	var assetName string
+	switch space {
+	case config.E_SPACE:
+		assetName = "scan-eth.zip"
+	case config.CORE_SPACE:
+		assetName = "scan.zip"
+	default:
+		return nil
+	}
+
+	for _, asset := range allAssets {
+		if asset.Name == assetName {
+			return []GitHubReleaseAsset{asset}
+		}
+	}
+
+	return nil
+}
+
 func RunFrontendScript(frontendConfig *config.Frontend, globalConfig *config.Global) error {
 	switch frontendConfig.Type {
 	case "prebuilt":
 		{
-			githubRelease := GitHub{
-				RepoURL: frontendConfig.PrebuiltRepo,
-			}
-
-			// Get the latest release
-			release, err := githubRelease.GetLatestRelease()
-			if err != nil {
-				return fmt.Errorf("failed to get latest release: %v", err)
-			}
-			fmt.Printf("Latest prebuilt release: %s\n", release.TagName)
-
-			tempDir, err := os.MkdirTemp("", "sirius")
-			if err != nil {
-				return fmt.Errorf("failed to create temp dir: %v", err)
-			}
-
-			var asset GitHubReleaseAsset
-
-			var assetName string
-			if frontendConfig.Space == "eSpace" {
-				assetName = "scan-eth.zip"
-			} else if frontendConfig.Space == "coreSpace" {
-				assetName = "scan.zip"
-			} else {
-				return fmt.Errorf("unknown space: %s", frontendConfig.Space)
-			}
-
-			idx := slices.IndexFunc(release.Assets, func(asset GitHubReleaseAsset) bool {
-				return asset.Name == assetName
-			})
-			if idx == -1 {
-				return fmt.Errorf("failed to find asset: %s", assetName)
-			}
-			asset = release.Assets[idx]
-
-			fmt.Printf("Downloading release %s... (this may take a while)\n", asset.Name)
-
-			outPath := filepath.Join(tempDir, asset.Name)
-
-			if err := utils.DownloadFile(asset.BrowserDownloadURL, outPath); err != nil {
-				return fmt.Errorf("failed to download file: %v", err)
-			}
-			name := strings.TrimSuffix(asset.Name, ".zip")
-			utils.Unzip(outPath, filepath.Join(globalConfig.Workdir, name))
-			fmt.Printf("Preparing frontend in %s\n", filepath.Join(globalConfig.Workdir, name))
-
-			// move frontend to workdir
-			if _, err := os.Stat(filepath.Join(globalConfig.Workdir, "build")); err == nil {
-				os.RemoveAll(filepath.Join(globalConfig.Workdir, "build"))
-
-			}
-
-			// move build to workdir
-			if err := os.Rename(filepath.Join(globalConfig.Workdir, name, "build"), filepath.Join(globalConfig.Workdir, "build")); err != nil {
-				return fmt.Errorf("failed to move build: %v", err)
-			}
-
-			// remove empty dir
-			if err := os.RemoveAll(filepath.Join(globalConfig.Workdir, name)); err != nil {
-				return fmt.Errorf("failed to remove dir: %v", err)
-			}
-
-			// cleanup
-			defer func() {
-				slog.Debug("Removing temp dir", "path", tempDir)
-				if err := os.RemoveAll(tempDir); err != nil {
-					slog.Error("Failed to remove temp dir", "error", err)
-				}
-			}()
-
+			return prebuilt(frontendConfig, globalConfig)
 		}
 	default:
 		{
 			return fmt.Errorf("unknown frontend type: %s", frontendConfig.Type)
 		}
 	}
-
-	return nil
 }
