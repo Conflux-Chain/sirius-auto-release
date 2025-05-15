@@ -5,56 +5,125 @@ import (
 	"Conflux-Chain/sirius-auto-release/internal/utils"
 	"bytes"
 	"fmt"
-	"html/template"
 	"net/url"
 	"path/filepath"
+	"text/template"
 )
 
-type NginxTemplateData struct {
-	APIURL   string
-	API_HOST string
+type NginxServerTemplate struct {
+	APIUrl     string
+	APIHost    string
+	ListenPort int
+	AssetDir   string
 }
 
-func (d *NginxTemplateData) generateNginxConfig() ([]byte, error) {
-	fmt.Println("Generating Nginx configuration file...")
+func (t *NginxServerTemplate) generateNginxConfig() ([]byte, error) {
+	fmt.Println("Generating Nginx server configuration...")
 
-	temp, err := template.New("nginx").Parse(config.NginxTemplate)
+	parseURL, err := url.Parse(t.APIUrl)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse nginx template: %v", err)
+		return nil, fmt.Errorf("failed to parse URL: %w", err)
+	}
+
+	t.APIHost = parseURL.Hostname()
+
+	return generateFromTemplate(config.NginxServerTemplate, t)
+}
+
+type NginxBaseTemplateData struct {
+	Servers string
+}
+
+func (d *NginxBaseTemplateData) generateNginxConfig() ([]byte, error) {
+	fmt.Println("Generating Nginx configuration file...")
+	return generateFromTemplate(config.NginxBaseTemplate, d)
+}
+
+func generateFromTemplate(templateText string, data interface{}) ([]byte, error) {
+	tmpl, err := template.New("nginx").Parse(templateText)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse nginx template: %w", err)
 	}
 
 	var buf bytes.Buffer
-	if err := temp.Execute(&buf, d); err != nil {
-		return nil, fmt.Errorf("failed to execute nginx template: %v", err)
+	if err := tmpl.Execute(&buf, data); err != nil {
+		return nil, fmt.Errorf("failed to execute nginx template: %w", err)
 	}
 
 	return buf.Bytes(), nil
 }
 
-func (d *NginxTemplateData) writeToFile(outPath string) error {
-	content, err := d.generateNginxConfig()
-	if err != nil {
-		return err
-	}
-
+func writeToFile(content []byte, outPath string) error {
 	if err := utils.WriteToFile(content, outPath); err != nil {
-		return err
+		return fmt.Errorf("failed to write nginx config: %w", err)
 	}
 	fmt.Println("Nginx configuration file generated at:", outPath)
 	return nil
 }
+
+func getServerConfigs(proxyConfig *config.Proxy, globalConfig *config.Global) ([]NginxServerTemplate, error) {
+	var configs []NginxServerTemplate
+
+	switch globalConfig.Space {
+	case "all":
+		configs = append(configs,
+			NginxServerTemplate{
+				APIUrl:     proxyConfig.CoreSpace.API_URL,
+				AssetDir:   "scan/build",
+				ListenPort: proxyConfig.CoreSpace.Port,
+			},
+			NginxServerTemplate{
+				APIUrl:     proxyConfig.ESpace.API_URL,
+				AssetDir:   "scan-eth/build",
+				ListenPort: proxyConfig.ESpace.Port,
+			},
+		)
+	case "core":
+		configs = append(configs, NginxServerTemplate{
+			APIUrl:     proxyConfig.CoreSpace.API_URL,
+			AssetDir:   "scan/build",
+			ListenPort: proxyConfig.CoreSpace.Port,
+		})
+	case "eSpace":
+		configs = append(configs, NginxServerTemplate{
+			APIUrl:     proxyConfig.ESpace.API_URL,
+			AssetDir:   "scan-eth/build",
+			ListenPort: proxyConfig.ESpace.Port,
+		})
+	default:
+		return nil, fmt.Errorf("no matching assets found for space: %s", globalConfig.Space)
+	}
+
+	return configs, nil
+}
+
 func RunProxyScript(proxyConfig *config.Proxy, globalConfig *config.Global) error {
-	parseURL, err := url.Parse(proxyConfig.API_URL)
-
+	configs, err := getServerConfigs(proxyConfig, globalConfig)
 	if err != nil {
-		return fmt.Errorf("failed to parse URL: %v", err)
+		return err
 	}
 
-	data := NginxTemplateData{
-		APIURL:   proxyConfig.API_URL,
-		API_HOST: parseURL.Hostname(),
+	// nginx server config
+	var content bytes.Buffer
+	for _, config := range configs {
+		buf, err := config.generateNginxConfig()
+		if err != nil {
+			return fmt.Errorf("failed to generate server config: %w", err)
+		}
+		content.Write(buf)
+		content.WriteString("\n")
 	}
+
+	// nginx base config
+	data := NginxBaseTemplateData{
+		Servers: string(content.Bytes()),
+	}
+
+	buf, err := data.generateNginxConfig()
+	if err != nil {
+		return fmt.Errorf("failed to generate base config: %w", err)
+	}
+
 	output := filepath.Join(globalConfig.Workdir, "nginx.conf")
-
-	return data.writeToFile(output)
+	return writeToFile(buf, output)
 }
