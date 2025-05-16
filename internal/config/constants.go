@@ -7,6 +7,9 @@ const (
 
 	FRONTEND_TYPE_PREBUILT = "prebuilt"
 	FRONTEND_TYPE_SOURCE   = "source"
+
+	CORE_SPACE_DIR = "scan"
+	E_SPACE_DIR    = "scan-eth"
 )
 
 const (

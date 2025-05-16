@@ -19,6 +19,65 @@ type GitHubReleaseAsset struct {
 	BrowserDownloadURL string `json:"browser_download_url"`
 }
 
+func (g *GitHubReleaseAsset) WriteSettingsToFile(cfg *config.Frontend, globalConfig *config.Global) error {
+	dirName := strings.TrimSuffix(g.Name, ".zip")
+
+	// Determine if we need to inject settings and what data to inject
+	var injectSettings bool
+	var injectData any
+
+	switch {
+	case globalConfig.Space == config.ALL_SPACE:
+		if dirName == config.CORE_SPACE_DIR && cfg.CoreSpaceSettings.Enabled {
+			injectSettings = true
+			injectData = cfg.CoreSpaceSettings
+		} else if dirName == config.E_SPACE_DIR && cfg.ESpaceSettings.Enabled {
+			injectSettings = true
+			injectData = cfg.ESpaceSettings
+		}
+	case globalConfig.Space == config.CORE_SPACE && cfg.CoreSpaceSettings.Enabled && dirName == config.CORE_SPACE_DIR:
+		injectSettings = true
+		injectData = cfg.CoreSpaceSettings
+	case globalConfig.Space == config.E_SPACE && cfg.ESpaceSettings.Enabled && dirName == config.E_SPACE_DIR:
+		injectSettings = true
+		injectData = cfg.ESpaceSettings
+	}
+
+	if !injectSettings {
+		return nil
+	}
+
+	// Marshal settings to JSON
+	jsonData, err := json.Marshal(injectData)
+	if err != nil {
+		return fmt.Errorf("failed to marshal inject data: %v", err)
+	}
+
+	// Create script tag with settings
+	scriptTag := fmt.Sprintf("<script type=\"text/javascript\">\n  window.customConfig = %s;\n</script>", string(jsonData))
+	slog.Debug("Injecting settings into HTML", "scriptTag", scriptTag)
+
+	// Read HTML file
+	htmlFilePath := filepath.Join(globalConfig.Workdir, dirName, "build", "index.html")
+	htmlContent, err := os.ReadFile(htmlFilePath)
+	if err != nil {
+		return fmt.Errorf("failed to read HTML file: %v", err)
+	}
+
+	// Inject script tag before closing body tag
+	newHTMLContent := strings.Replace(string(htmlContent), "<body>", scriptTag+"<body>", 1)
+
+	// Write modified HTML back to file
+	if err := os.WriteFile(htmlFilePath, []byte(newHTMLContent), 0644); err != nil {
+		return fmt.Errorf("failed to write HTML file: %v", err)
+	}
+
+	slog.Debug("Injected settings into HTML", "filePath", htmlFilePath)
+	fmt.Println("Injected settings into HTML file:", htmlFilePath)
+
+	return nil
+}
+
 type GitHubRelease struct {
 	TagName string               `json:"tag_name"`
 	Assets  []GitHubReleaseAsset `json:"assets"`
@@ -124,6 +183,11 @@ func prebuilt(frontendConfig *config.Frontend, globalConfig *config.Global) erro
 		}
 
 		fmt.Printf("Frontend prepared in %s\n", extractPath)
+
+		if err := asset.WriteSettingsToFile(frontendConfig, globalConfig); err != nil {
+			return fmt.Errorf("failed to write settings to file: %v", err)
+		}
+
 	}
 
 	return nil
