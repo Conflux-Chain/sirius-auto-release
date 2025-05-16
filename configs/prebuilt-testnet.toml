@@ -1,0 +1,61 @@
+# Config version
+[global]
+# The version of this configuration file.
+version = 1
+
+# Specifies the active space: "core", "eSpace", or "all".
+space = "all"
+
+# The output directory for generated files.
+workdir = "./frontend"
+
+
+# Frontend settings
+[frontend]
+# Specifies the frontend type: "prebuilt" or "source".
+#   "prebuilt": Uses prebuilt files, downloaded from the `prebuilt_repo`.
+#   "source": Uses source files, downloaded from `sirius_repo` or `sirius_eth_repo`, and then builds them. (Requires Docker for building).
+type = "prebuilt"
+
+# sirius_repo = "https://github.com/Conflux-Chain/sirius.git"
+# sirius_eth_repo = "https://github.com/Conflux-Chain/sirius-eth.git"
+prebuilt_repo = "https://github.com/Conflux-Chain/sirius-auto-release.git"
+
+[proxy]
+# Set to true to enable proxy configuration generation.
+enabled = true
+# Specifies the proxy type, e.g., "nginx".
+type = "nginx"
+
+# Proxy configuration for Core Space.
+[proxy.core_space]
+# The backend API URL for Core Space.
+api_url = "https://testnet.confluxscan.io"
+# Port for the Core Space proxy.
+port = 3000
+
+
+# Proxy configuration for eSpace.
+[proxy.e_space]
+# The backend API URL for eSpace.
+api_url = "https://evmtestnet.confluxscan.org"
+port = 3001
+
+
+# Settings for running the frontend in a container.
+[container]
+# Set to true to enable container configuration.
+enabled = true
+# Specifies the container type: "docker", or "docker-compose".
+# type = "docker"
+type = "docker-compose"
+name = "scan-frontend"
+tag = "latest"
+
+[container.core_space]
+# Port mapping for the Core Space container.
+port = 8000
+
+[container.e_space]
+# Port mapping for the eSpace container.
+port = 8001
