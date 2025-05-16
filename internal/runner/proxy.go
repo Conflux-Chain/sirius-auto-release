@@ -5,6 +5,7 @@ import (
 	"Conflux-Chain/sirius-auto-release/internal/utils"
 	"bytes"
 	"fmt"
+	"net"
 	"net/url"
 	"path/filepath"
 	"text/template"
@@ -25,7 +26,13 @@ func (t *NginxServerTemplate) generateNginxConfig() ([]byte, error) {
 		return nil, fmt.Errorf("failed to parse URL: %w", err)
 	}
 
-	t.APIHost = parseURL.Hostname()
+	hostname := parseURL.Hostname()
+
+	if net.ParseIP(hostname) == nil {
+		t.APIHost = hostname
+	} else {
+		t.APIHost = ""
+	}
 
 	return generateFromTemplate(config.NginxServerTemplate, t)
 }
