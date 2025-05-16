@@ -7,6 +7,9 @@ const (
 
 	FRONTEND_TYPE_PREBUILT = "prebuilt"
 	FRONTEND_TYPE_SOURCE   = "source"
+)
 
-	CONTAINER_TYPE_DOCKER = "docker"
+const (
+	CONTAINER_TYPE_DOCKER         = "docker"
+	CONTAINER_TYPE_DOCKER_COMPOSE = "docker-compose"
 )

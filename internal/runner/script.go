@@ -2,6 +2,7 @@ package runner
 
 import (
 	"Conflux-Chain/sirius-auto-release/internal/config"
+	"Conflux-Chain/sirius-auto-release/internal/utils"
 	"fmt"
 	"log/slog"
 )
@@ -20,29 +21,35 @@ func RunScript(cfg *config.Config) error {
 	}
 
 	if cfg.Container.Enabled {
-		if err := RunContainerScript(&cfg.Container, &cfg.Global); err != nil {
+		if err := RunContainerScript(&cfg.Container, &cfg.Proxy, &cfg.Global); err != nil {
 			return err
 		}
 	}
 
 	// Print help message
 	if cfg.Container.Enabled {
+		fmt.Println("Dockerfile generated successfully.")
 		if cfg.Container.Type == config.CONTAINER_TYPE_DOCKER {
-			fmt.Println("Dockerfile generated successfully.")
 			fmt.Println("To build the Docker image, run:")
 			fmt.Print("\n\n")
 			fmt.Printf("cd %s &&", cfg.Global.Workdir)
 			fmt.Printf(" docker build -t %s:%s . &&", cfg.Container.Name, cfg.Container.Tag)
 			fmt.Printf(" docker run ")
-			if cfg.Global.Space == config.ALL_SPACE {
-				fmt.Printf(" -p %d:%d -p %d:%d", cfg.Container.CoreSpace.Port, cfg.Proxy.CoreSpace.Port, cfg.Container.ESpace.Port, cfg.Proxy.ESpace.Port)
-			} else if cfg.Global.Space == config.CORE_SPACE {
-				fmt.Printf(" -p %d:%d", cfg.Container.CoreSpace.Port, cfg.Proxy.CoreSpace.Port)
-			} else if cfg.Global.Space == config.E_SPACE {
-				fmt.Printf(" -p %d:%d", cfg.Container.ESpace.Port, cfg.Proxy.ESpace.Port)
+
+			if ports := utils.GetPortBindingForConfig(&cfg.Global, &cfg.Proxy, &cfg.Container); len(ports) > 0 {
+				for _, port := range ports {
+					fmt.Printf(" -p %s", port)
+				}
 			}
+
 			fmt.Printf(" %s:%s \n", cfg.Container.Name, cfg.Container.Tag)
 
+			fmt.Print("\n\n")
+		} else if cfg.Container.Type == config.CONTAINER_TYPE_DOCKER_COMPOSE {
+			fmt.Println("To start the Docker container, run:")
+			fmt.Print("\n\n")
+			fmt.Printf("cd %s &&", cfg.Global.Workdir)
+			fmt.Printf(" docker compose up -d --build  \n")
 			fmt.Print("\n\n")
 		}
 

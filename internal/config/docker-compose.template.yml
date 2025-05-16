@@ -1,0 +1,11 @@
+
+services:
+  {{ .ServiceName }}:
+    build:
+      context: .
+    ports:
+      {{- range .Ports }}
+      - "{{ . }}"
+      {{- end }}
+    restart: always
+    

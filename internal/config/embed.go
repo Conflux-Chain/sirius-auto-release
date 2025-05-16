@@ -12,3 +12,6 @@ var NginxServerTemplate string
 
 //go:embed dockerfile
 var DockerTemplate string
+
+//go:embed docker-compose.template.yml
+var DockerComposeTemplate string
