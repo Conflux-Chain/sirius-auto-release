@@ -21,7 +21,7 @@ func RunScript(cfg *config.Config) error {
 	}
 
 	if cfg.Container.Enabled {
-		if err := RunContainerScript(&cfg.Container, &cfg.Proxy, &cfg.Global); err != nil {
+		if err := RunContainerScript(cfg); err != nil {
 			return err
 		}
 	}

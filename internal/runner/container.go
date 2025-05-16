@@ -63,7 +63,7 @@ type DockerComposeTemplateData struct {
 	Ports       []string
 }
 
-func dockerCompose(containerConfig *config.Container, proxyConfig *config.Proxy, globalConfig *config.Global) error {
+func dockerCompose(cfg *config.Config) error {
 
 	dockerCompose := config.DockerComposeTemplate
 
@@ -73,17 +73,17 @@ func dockerCompose(containerConfig *config.Container, proxyConfig *config.Proxy,
 	}
 
 	var buf bytes.Buffer
-	ports := utils.GetPortBindingForConfig(globalConfig, proxyConfig, containerConfig)
+	ports := utils.GetPortBindingForConfig(&cfg.Global, &cfg.Proxy, &cfg.Container)
 
 	data := DockerComposeTemplateData{
-		ServiceName: containerConfig.Name,
+		ServiceName: cfg.Container.Name,
 		Ports:       ports,
 	}
 
 	if err := tmpl.Execute(&buf, data); err != nil {
 		return fmt.Errorf("failed to execute docker-compose template: %v", err)
 	}
-	outputPath := filepath.Join(globalConfig.Workdir, "docker-compose.yml")
+	outputPath := filepath.Join(cfg.Global.Workdir, "docker-compose.yml")
 	if err := utils.WriteToFile(buf.Bytes(), outputPath); err != nil {
 		return fmt.Errorf("failed to write docker-compose.yml: %v", err)
 	}
@@ -91,23 +91,23 @@ func dockerCompose(containerConfig *config.Container, proxyConfig *config.Proxy,
 
 }
 
-func RunContainerScript(containerConfig *config.Container, proxyConfig *config.Proxy, globalConfig *config.Global) error {
+func RunContainerScript(cfg *config.Config) error {
 
-	switch containerConfig.Type {
+	switch cfg.Container.Type {
 	case config.CONTAINER_TYPE_DOCKER:
 		{
 
-			return docker(containerConfig, globalConfig)
+			return docker(&cfg.Container, &cfg.Global)
 		}
 	case config.CONTAINER_TYPE_DOCKER_COMPOSE:
 		{
-			if err := docker(containerConfig, globalConfig); err != nil {
+			if err := docker(&cfg.Container, &cfg.Global); err != nil {
 				return err
 			}
-			return dockerCompose(containerConfig, proxyConfig, globalConfig)
+			return dockerCompose(cfg)
 		}
 	default:
-		return fmt.Errorf("unknown container type: %s", containerConfig.Type)
+		return fmt.Errorf("unknown container type: %s", cfg.Container.Type)
 
 	}
 
