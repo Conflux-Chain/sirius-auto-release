@@ -1,2 +1,4 @@
 scan
 scan-eth
+*.log
+frontend
