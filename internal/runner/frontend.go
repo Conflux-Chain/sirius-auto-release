@@ -149,7 +149,8 @@ func prebuilt(frontendConfig *config.Frontend, globalConfig *config.Global) erro
 	if err != nil {
 		return fmt.Errorf("failed to get latest release: %v", err)
 	}
-	fmt.Printf("Latest prebuilt release: %s\n", release.TagName)
+
+	utils.ShowStep(fmt.Sprintf("Latest prebuilt release: %s\n", release.TagName))
 
 	tempDir, err := os.MkdirTemp("", "sirius")
 	if err != nil {
@@ -169,7 +170,8 @@ func prebuilt(frontendConfig *config.Frontend, globalConfig *config.Global) erro
 	}
 
 	for _, asset := range assetsToDownload {
-		fmt.Printf("Downloading release %s... (this may take a while)\n", asset.Name)
+
+		utils.ShowStep(fmt.Sprintf("Downloading release %s... (this may take a while)\n", asset.Name))
 
 		downloadPath := filepath.Join(tempDir, asset.Name)
 		if err := utils.DownloadFile(asset.BrowserDownloadURL, downloadPath); err != nil {
@@ -182,7 +184,7 @@ func prebuilt(frontendConfig *config.Frontend, globalConfig *config.Global) erro
 			return fmt.Errorf("failed to extract %s: %v", asset.Name, err)
 		}
 
-		fmt.Printf("Frontend prepared in %s\n", extractPath)
+		utils.ShowStep(fmt.Sprintf("Frontend prepared in %s\n", extractPath))
 
 		if err := asset.WriteSettingsToFile(frontendConfig, globalConfig); err != nil {
 			return fmt.Errorf("failed to write settings to file: %v", err)
@@ -219,6 +221,8 @@ func selectAssetsToDownload(space string, allAssets []GitHubReleaseAsset) []GitH
 }
 
 func RunFrontendScript(frontendConfig *config.Frontend, globalConfig *config.Global) error {
+
+	utils.ShowTitle("Frontend")
 	switch frontendConfig.Type {
 	case "prebuilt":
 		{

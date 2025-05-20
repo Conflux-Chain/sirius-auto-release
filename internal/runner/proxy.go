@@ -19,7 +19,6 @@ type NginxServerTemplate struct {
 }
 
 func (t *NginxServerTemplate) generateNginxConfig() ([]byte, error) {
-	fmt.Println("Generating Nginx server configuration...")
 
 	parseURL, err := url.Parse(t.APIUrl)
 	if err != nil {
@@ -42,7 +41,6 @@ type NginxBaseTemplateData struct {
 }
 
 func (d *NginxBaseTemplateData) generateNginxConfig() ([]byte, error) {
-	fmt.Println("Generating Nginx configuration file...")
 	return generateFromTemplate(config.NginxBaseTemplate, d)
 }
 
@@ -105,7 +103,13 @@ func getServerConfigs(proxyConfig *config.Proxy, globalConfig *config.Global) ([
 }
 
 func RunProxyScript(proxyConfig *config.Proxy, globalConfig *config.Global) error {
+
+	utils.ShowTitle("Proxy")
+
 	configs, err := getServerConfigs(proxyConfig, globalConfig)
+
+	utils.ShowStep(fmt.Sprintf("Generating Nginx configuration for %s space...\n", globalConfig.Space))
+
 	if err != nil {
 		return err
 	}
@@ -132,5 +136,6 @@ func RunProxyScript(proxyConfig *config.Proxy, globalConfig *config.Global) erro
 	}
 
 	output := filepath.Join(globalConfig.Workdir, "nginx.conf")
+	utils.ShowStep(fmt.Sprintf("Writing Nginx configuration to %s...\n", output))
 	return writeToFile(buf, output)
 }

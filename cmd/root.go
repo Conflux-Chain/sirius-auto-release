@@ -6,6 +6,7 @@ package cmd
 import (
 	"Conflux-Chain/sirius-auto-release/internal/config"
 	"Conflux-Chain/sirius-auto-release/internal/runner"
+	"Conflux-Chain/sirius-auto-release/internal/utils"
 	"fmt"
 	"log/slog"
 	"os"
@@ -39,18 +40,19 @@ var rootCmd = &cobra.Command{
 		slog.Debug("Sirius application started")
 
 		if configFile != "" {
+			utils.ShowTitle("Loading config file from: " + configFile)
+
 			cfg, err := config.LoadConfig(configFile)
 			if err != nil {
 				slog.Error("Failed to load config file", "error", err)
-				fmt.Printf("Error: Could not load config file: %v\n", err)
+				utils.ShowFailure(fmt.Sprintf("Error: Could not load config file: %v\n", err))
 				return
 			}
-
 			slog.Debug("Config loaded successfully", "version", cfg.Global.Version, "workdir", cfg.Global.Workdir)
 
 			if err := runner.RunScript(&cfg); err != nil {
 				slog.Error("Error running script", "error", err)
-				fmt.Printf("Error: %v\n", err)
+				utils.ShowFailure(fmt.Sprintf("Run Error: %v\n", err))
 				return
 			}
 

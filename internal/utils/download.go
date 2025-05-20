@@ -6,20 +6,8 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
-	"path/filepath"
 	"time"
 )
-
-func humanReadableSize(size int64) string {
-	if size < 1024 {
-		return fmt.Sprintf("%d B", size)
-	} else if size < 1024*1024 {
-		return fmt.Sprintf("%.2f KB", float64(size)/1024)
-	} else if size < 1024*1024*1024 {
-		return fmt.Sprintf("%.2f MB", float64(size)/(1024*1024))
-	}
-	return fmt.Sprintf("%.2f GB", float64(size)/(1024*1024*1024))
-}
 
 func DownloadFile(url string, filePath string) error {
 
@@ -61,8 +49,6 @@ func DownloadFile(url string, filePath string) error {
 		return fmt.Errorf("failed to download file: %v", err)
 	}
 	slog.Debug("File downloaded successfully", "path", filePath)
-
-	fmt.Printf("✓ Downloaded %s successfully (%s)\n", filepath.Base(filePath), humanReadableSize(resp.ContentLength))
 
 	return nil
 }

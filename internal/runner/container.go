@@ -28,6 +28,7 @@ func getCopyPathsForSpace(space string) (string, error) {
 
 func docker(cfg *config.Container, globalConfig *config.Global) error {
 
+	utils.ShowTitle("Generating Dockerfile...")
 	dockerfile := config.DockerTemplate
 
 	tmpl, err := template.New("dockerfile").Parse(dockerfile)
@@ -55,6 +56,7 @@ func docker(cfg *config.Container, globalConfig *config.Global) error {
 		return fmt.Errorf("failed to write Dockerfile: %v", err)
 	}
 
+	utils.ShowStep(fmt.Sprintf("Dockerfile generated successfully at %s\n", outputPath))
 	return nil
 }
 
@@ -64,6 +66,8 @@ type DockerComposeTemplateData struct {
 }
 
 func dockerCompose(cfg *config.Config) error {
+
+	utils.ShowTitle("Generating docker-compose.yml...")
 
 	dockerCompose := config.DockerComposeTemplate
 
@@ -87,6 +91,8 @@ func dockerCompose(cfg *config.Config) error {
 	if err := utils.WriteToFile(buf.Bytes(), outputPath); err != nil {
 		return fmt.Errorf("failed to write docker-compose.yml: %v", err)
 	}
+
+	utils.ShowStep(fmt.Sprintf("docker-compose.yml generated successfully at %s\n", outputPath))
 	return nil
 
 }
