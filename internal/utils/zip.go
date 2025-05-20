@@ -4,16 +4,17 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
-	"log/slog"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/charmbracelet/log"
 )
 
 func Unzip(src string, out string) error {
 
 	r, err := zip.OpenReader(src)
-	slog.Debug("Opening zip file", "path", src)
+	log.Debug("Opening zip file", "path", src)
 	if err != nil {
 		return fmt.Errorf("failed to open zip file: %v", err)
 	}
@@ -44,7 +45,6 @@ func Unzip(src string, out string) error {
 
 			continue
 		}
-		slog.Debug("Extracting file", "path", fpath)
 		if err := os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
 			return fmt.Errorf("failed to create directory: %v", err)
 		}

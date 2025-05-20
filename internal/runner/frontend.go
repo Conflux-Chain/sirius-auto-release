@@ -5,13 +5,14 @@ import (
 	"Conflux-Chain/sirius-auto-release/internal/utils"
 	"encoding/json"
 	"fmt"
-	"log/slog"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/charmbracelet/log"
 )
 
 type GitHubReleaseAsset struct {
@@ -55,7 +56,7 @@ func (g *GitHubReleaseAsset) WriteSettingsToFile(cfg *config.Frontend, globalCon
 
 	// Create script tag with settings
 	scriptTag := fmt.Sprintf("<script type=\"text/javascript\">\n  window.customConfig = %s;\n</script>", string(jsonData))
-	slog.Debug("Injecting settings into HTML", "scriptTag", scriptTag)
+	log.Debug("Injecting settings into HTML", "scriptTag", scriptTag)
 
 	// Read HTML file
 	htmlFilePath := filepath.Join(globalConfig.Workdir, dirName, "build", "index.html")
@@ -72,7 +73,7 @@ func (g *GitHubReleaseAsset) WriteSettingsToFile(cfg *config.Frontend, globalCon
 		return fmt.Errorf("failed to write HTML file: %v", err)
 	}
 
-	slog.Debug("Injected settings into HTML", "filePath", htmlFilePath)
+	log.Debug("Injected settings into HTML", "filePath", htmlFilePath)
 	fmt.Println("Injected settings into HTML file:", htmlFilePath)
 
 	return nil
@@ -91,7 +92,7 @@ func (g *GitHub) GetLatestRelease() (GitHubRelease, error) {
 
 	parseURL, err := url.Parse(g.RepoURL)
 
-	slog.Debug("Parsed URL", "url", parseURL)
+	log.Debug("Parsed URL", "url", parseURL)
 
 	if err != nil {
 		return GitHubRelease{}, fmt.Errorf("failed to parse URL: %v", err)
@@ -112,7 +113,7 @@ func (g *GitHub) GetLatestRelease() (GitHubRelease, error) {
 
 	apiURL := fmt.Sprintf("https://api.github.com/repos/%s/%s/releases/latest", repoOwner, repoName)
 
-	slog.Debug("Fetching latest release from", "url", apiURL)
+	log.Debug("Fetching latest release from", "url", apiURL)
 
 	client := http.Client{
 		Timeout: 10 * time.Minute,
@@ -158,9 +159,9 @@ func prebuilt(frontendConfig *config.Frontend, globalConfig *config.Global) erro
 	}
 
 	defer func() {
-		slog.Debug("Removing temporary directory", "path", tempDir)
+		log.Debug("Removing temporary directory", "path", tempDir)
 		if err := os.RemoveAll(tempDir); err != nil {
-			slog.Error("Failed to remove temporary directory", "error", err)
+			log.Error("Failed to remove temporary directory", "error", err)
 		}
 	}()
 

@@ -4,12 +4,13 @@ import (
 	"Conflux-Chain/sirius-auto-release/internal/config"
 	"Conflux-Chain/sirius-auto-release/internal/utils"
 	"fmt"
-	"log/slog"
+
+	"github.com/charmbracelet/log"
 )
 
 func RunScript(cfg *config.Config) error {
 
-	slog.Debug("Starting script execution")
+	log.Debug("Starting script execution")
 	if err := RunFrontendScript(&cfg.Frontend, &cfg.Global); err != nil {
 		return err
 	}
