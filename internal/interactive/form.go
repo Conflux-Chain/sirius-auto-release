@@ -3,6 +3,9 @@ package interactive
 import (
 	"Conflux-Chain/sirius-auto-release/internal/config"
 	"Conflux-Chain/sirius-auto-release/internal/i18n"
+	"Conflux-Chain/sirius-auto-release/internal/utils"
+	"fmt"
+	"strconv"
 
 	"github.com/charmbracelet/huh"
 )
@@ -43,7 +46,40 @@ func runFrontendForm(cfg *config.Frontend, language string) error {
 	}
 
 	if cfg.CoreSpaceSettings.Enabled {
-		// TODO: add core space settings
+
+		networkId := ""
+		if err := huh.NewForm(
+			huh.NewGroup(
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvOpenApiHost")).Value(&cfg.CoreSpaceSettings.EnvOpenApiHost),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvRpcServer")).Value(&cfg.CoreSpaceSettings.EnvRpcServer),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvNetworkID")).Value(&networkId).Validate(func(s string) error {
+					if s == "" {
+						return fmt.Errorf("networkId cannot be empty")
+					}
+					if _, err := strconv.Atoi(s); err != nil {
+						return fmt.Errorf("networkId must be a number")
+					}
+
+					return nil
+				}),
+
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvNetworkType")).Value(&cfg.CoreSpaceSettings.EnvNetworkType),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvChainType")).Value(&cfg.CoreSpaceSettings.EnvChainType),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvFcAddress")).Value(&cfg.CoreSpaceSettings.EnvFcAddress),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvFcExchangeAddress")).Value(&cfg.CoreSpaceSettings.EnvFcExchangeAddress),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvFcExchangeInterestAddress")).Value(&cfg.CoreSpaceSettings.EnvFcExchangeInterestAddress),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvEnsRegistryAddress")).Value(&cfg.CoreSpaceSettings.EnvEnsRegistryAddress),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvEnsPublicResolverAddress")).Value(&cfg.CoreSpaceSettings.EnvEnsPublicResolverAddress),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvLogo")).Value(&cfg.CoreSpaceSettings.EnvLogo),
+			),
+		).Run(); err != nil {
+			return err
+		}
+
+		// network id is already validated
+		netId, _ := strconv.Atoi(networkId)
+		cfg.CoreSpaceSettings.EnvNetworkID = netId
+
 	}
 
 	if err := huh.NewConfirm().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.Enabled")).Value(&cfg.ESpaceSettings.Enabled).Run(); err != nil {
@@ -51,7 +87,56 @@ func runFrontendForm(cfg *config.Frontend, language string) error {
 	}
 
 	if cfg.ESpaceSettings.Enabled {
-		// TODO: add ESpace settings
+
+		networkId := ""
+		if err := huh.NewForm(
+			huh.NewGroup(
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvApiHost")).Value(&cfg.ESpaceSettings.EnvApiHost),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvCoreApiHost")).Value(&cfg.ESpaceSettings.EnvCoreApiHost),
+
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvCoreScanHost")).Value(&cfg.ESpaceSettings.EnvCoreScanHost),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvRpcServer")).Value(&cfg.ESpaceSettings.EnvRpcServer),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvNetworkID")).Value(&networkId).Validate(utils.ValidateNumber("networkId")),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvChainType")).Value(&cfg.ESpaceSettings.EnvChainType),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvLogo")).Value(&cfg.ESpaceSettings.EnvLogo),
+			),
+		).Run(); err != nil {
+			return err
+		}
+
+		netId, _ := strconv.Atoi(networkId)
+		cfg.ESpaceSettings.EnvNetworkID = netId
+
+		chainId := ""
+
+		rpcUrl := ""
+		blockExplorerUrl := ""
+
+		decimals := ""
+		if err := huh.NewForm(
+			huh.NewGroup(
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.ChainID")).Value(&chainId).Validate(utils.ValidateNumber("chainId")),
+
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.ChainName")).Value(&cfg.ESpaceSettings.EnvWalletConfig.ChainName),
+
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.RpcUrls")).Value(&rpcUrl),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.BlockExplorerUrls")).Value(&blockExplorerUrl),
+
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.NativeCurrency.Name")).Value(&cfg.ESpaceSettings.EnvWalletConfig.NativeCurrency.Name),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.NativeCurrency.Symbol")).Value(&cfg.ESpaceSettings.EnvWalletConfig.NativeCurrency.Symbol),
+				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.NativeCurrency.Decimals")).Value(&decimals).Validate(utils.ValidateNumber("decimals")).Placeholder("18"),
+			),
+		).Run(); err != nil {
+			return err
+		}
+
+		chainIdInt, _ := strconv.Atoi(chainId)
+		cfg.ESpaceSettings.EnvWalletConfig.ChainID = chainIdInt
+		cfg.ESpaceSettings.EnvWalletConfig.RpcUrls = []string{rpcUrl}
+		cfg.ESpaceSettings.EnvWalletConfig.BlockExplorerUrls = []string{blockExplorerUrl}
+		decimalsInt, _ := strconv.Atoi(decimals)
+		cfg.ESpaceSettings.EnvWalletConfig.NativeCurrency.Decimals = decimalsInt
+
 	}
 
 	return nil

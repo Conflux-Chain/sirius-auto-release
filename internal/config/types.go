@@ -3,7 +3,7 @@ package config
 import "Conflux-Chain/sirius-auto-release/internal/i18n"
 
 type WalletConfig struct {
-	ChainID           int      `mapstructure:"chainId"`
+	ChainID           int      `mapstructure:"chainId" huh_en:"Please input a chain id" huh_zh:"请输入链 ID"`
 	ChainName         string   `mapstructure:"chainName" huh_en:"Please input a chain name" huh_zh:"请输入链名称"`
 	RpcUrls           []string `mapstructure:"rpcUrls" huh_en:"Please input a rpc urls" huh_zh:"请输入 rpc 地址"`
 	BlockExplorerUrls []string `mapstructure:"blockExplorerUrls" huh_en:"Please input a block explorer urls" huh_zh:"请输入区块浏览器地址"`
