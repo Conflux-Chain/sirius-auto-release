@@ -28,7 +28,7 @@ func runGlobalForm(cfg *config.Global, language string) error {
 
 }
 
-func runFrontendForm(cfg *config.Frontend, language string) error {
+func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, language string) error {
 
 	if err := huh.NewForm(
 		huh.NewGroup(
@@ -45,7 +45,7 @@ func runFrontendForm(cfg *config.Frontend, language string) error {
 		return err
 	}
 
-	if cfg.CoreSpaceSettings.Enabled {
+	if (globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.CORE_SPACE) && cfg.CoreSpaceSettings.Enabled {
 
 		networkId := ""
 		if err := huh.NewForm(
@@ -86,7 +86,7 @@ func runFrontendForm(cfg *config.Frontend, language string) error {
 		return err
 	}
 
-	if cfg.ESpaceSettings.Enabled {
+	if (globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.E_SPACE) && cfg.ESpaceSettings.Enabled {
 
 		networkId := ""
 		if err := huh.NewForm(
@@ -139,5 +139,46 @@ func runFrontendForm(cfg *config.Frontend, language string) error {
 
 	}
 
+	return nil
+}
+
+func runProxyForm(cfg *config.Proxy, globalConfig *config.Global, language string) error {
+
+	if err := huh.NewConfirm().Title(i18n.T(language, "Config.Proxy.Enabled")).Value(&cfg.Enabled).Run(); err != nil {
+		return err
+	}
+	if cfg.Enabled {
+		cfg.Type = "nginx"
+
+		if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.CORE_SPACE {
+
+			port := ""
+			if err := huh.NewForm(
+				huh.NewGroup(
+					huh.NewInput().Title(i18n.T(language, "Config.Proxy.CoreSpace.Port")).Value(&port).Validate(utils.ValidateNumber("port")),
+					huh.NewInput().Title(i18n.T(language, "Config.Proxy.CoreSpace.API_URL")).Value(&cfg.CoreSpace.API_URL),
+				),
+			).Run(); err != nil {
+				return err
+			}
+			portInt, _ := strconv.Atoi(port)
+			cfg.CoreSpace.Port = portInt
+		}
+
+		if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.E_SPACE {
+			port := ""
+			if err := huh.NewForm(
+				huh.NewGroup(
+					huh.NewInput().Title(i18n.T(language, "Config.Proxy.ESpace.Port")).Value(&port).Validate(utils.ValidateNumber("port")),
+					huh.NewInput().Title(i18n.T(language, "Config.Proxy.ESpace.API_URL")).Value(&cfg.ESpace.API_URL),
+				),
+			).Run(); err != nil {
+				return err
+			}
+
+			portInt, _ := strconv.Atoi(port)
+			cfg.ESpace.Port = portInt
+		}
+	}
 	return nil
 }

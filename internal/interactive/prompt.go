@@ -18,7 +18,11 @@ func CollectConfig(cfg *config.Config) (*config.Config, error) {
 		return nil, err
 	}
 
-	if err := runFrontendForm(&cfg.Frontend, language); err != nil {
+	if err := runFrontendForm(&cfg.Frontend, &cfg.Global, language); err != nil {
+		return nil, err
+	}
+
+	if err := runProxyForm(&cfg.Proxy, &cfg.Global, language); err != nil {
 		return nil, err
 	}
 

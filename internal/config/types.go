@@ -114,8 +114,8 @@ type Container struct {
 type Config struct {
 	Global    Global    `mapstructure:"global"`
 	Frontend  Frontend  `mapstructure:"frontend"`
-	Container Container `mapstructure:"container"`
 	Proxy     Proxy     `mapstructure:"proxy"`
+	Container Container `mapstructure:"container"`
 }
 
 func init() {
