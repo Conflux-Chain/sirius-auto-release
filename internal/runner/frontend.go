@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"time"
 
@@ -111,9 +112,9 @@ func (g *GitHub) GetLatestRelease() (GitHubRelease, error) {
 	repoOwner := pathParts[0]
 	repoName := strings.TrimSuffix(pathParts[1], ".git")
 
-	apiURL := fmt.Sprintf("https://api.github.com/repos/%s/%s/releases/latest", repoOwner, repoName)
+	apiURL := fmt.Sprintf("https://api.github.com/repos/%s/%s/releases", repoOwner, repoName)
 
-	log.Debug("Fetching latest release from", "url", apiURL)
+	log.Debug("Fetching release from", "url", apiURL)
 
 	client := http.Client{
 		Timeout: 10 * time.Minute,
@@ -131,13 +132,28 @@ func (g *GitHub) GetLatestRelease() (GitHubRelease, error) {
 		return GitHubRelease{}, fmt.Errorf("failed to get latest release: %s", resp.Status)
 	}
 
-	var releaseInfo GitHubRelease
+	var releaseInfo []GitHubRelease
 
 	if err := json.NewDecoder(resp.Body).Decode(&releaseInfo); err != nil {
 		return GitHubRelease{}, fmt.Errorf("failed to decode response: %v", err)
 	}
 
-	return releaseInfo, nil
+	index := slices.IndexFunc(releaseInfo, func(release GitHubRelease) bool {
+
+		for _, asset := range release.Assets {
+			if strings.HasPrefix(asset.Name, "scan") {
+				return true
+			}
+		}
+		return false
+	})
+
+	if index == -1 {
+		return GitHubRelease{}, fmt.Errorf("no matching release found")
+	}
+
+	return releaseInfo[index], nil
+
 }
 
 func prebuilt(frontendConfig *config.Frontend, globalConfig *config.Global) error {
@@ -213,7 +229,7 @@ func selectAssetsToDownload(space string, allAssets []GitHubReleaseAsset) []GitH
 	}
 
 	for _, asset := range allAssets {
-		if asset.Name == assetName {
+		if strings.Contains(asset.Name, assetName) {
 			return []GitHubReleaseAsset{asset}
 		}
 	}
