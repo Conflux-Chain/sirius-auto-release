@@ -90,6 +90,8 @@ name = "Conflux"
 symbol = "CFX"
 decimals = 18
 
+
+# default theme settings see: internal/config/defaultESpaceTheme.toml
 [frontend.e_space_settings.ENV_THEME]
 primary = "#17B38A"
 antdPrimaryButtonBg = "#7789D3"

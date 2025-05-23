@@ -26,5 +26,9 @@ func CollectConfig(cfg *config.Config) (*config.Config, error) {
 		return nil, err
 	}
 
+	if err := runContainerForm(&cfg.Container, &cfg.Global, language); err != nil {
+		return nil, err
+	}
+
 	return cfg, nil
 }

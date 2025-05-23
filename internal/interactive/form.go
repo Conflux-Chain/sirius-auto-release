@@ -12,6 +12,7 @@ import (
 
 func runGlobalForm(cfg *config.Global, language string) error {
 
+	cfg.Workdir = "./frontend"
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewSelect[string]().Title(i18n.T(language, "config.global.space")).Options(
@@ -30,6 +31,7 @@ func runGlobalForm(cfg *config.Global, language string) error {
 
 func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, language string) error {
 
+	cfg.PrebuiltRepo = "https://github.com/Conflux-Chain/sirius-auto-release.git"
 	if err := huh.NewForm(
 		huh.NewGroup(
 			huh.NewSelect[string]().Title(i18n.T(language, "Config.Frontend.Type")).Options(
@@ -112,7 +114,7 @@ func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, language
 		rpcUrl := ""
 		blockExplorerUrl := ""
 
-		decimals := ""
+		decimals := "18"
 		if err := huh.NewForm(
 			huh.NewGroup(
 				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.ChainID")).Value(&chainId).Validate(utils.ValidateNumber("chainId")),
@@ -180,5 +182,49 @@ func runProxyForm(cfg *config.Proxy, globalConfig *config.Global, language strin
 			cfg.ESpace.Port = portInt
 		}
 	}
+	return nil
+}
+
+func runContainerForm(cfg *config.Container, globalConfig *config.Global, language string) error {
+
+	if err := huh.NewConfirm().Title(i18n.T(language, "Config.Container.Enabled")).Value(&cfg.Enabled).Run(); err != nil {
+		return err
+	}
+
+	if cfg.Enabled {
+		cfg.Type = "docker"
+
+		if err := huh.NewInput().Title(i18n.T(language, "Config.Container.Name")).Value(&cfg.Name).Run(); err != nil {
+			return err
+		}
+
+		if err := huh.NewInput().Title(i18n.T(language, "Config.Container.Tag")).Value(&cfg.Tag).Run(); err != nil {
+			return err
+		}
+
+		if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.CORE_SPACE {
+
+			port := ""
+			if err := huh.NewInput().Title(fmt.Sprintf("%s %s", i18n.T(language, "Config.Container.CoreSpace"), i18n.T(language, "Config.Container.CoreSpace.Port"))).Value(&port).Validate(utils.ValidateNumber("port")).Run(); err != nil {
+				return err
+			}
+
+			portInt, _ := strconv.Atoi(port)
+			cfg.CoreSpace.Port = portInt
+		}
+
+		if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.E_SPACE {
+
+			port := ""
+			if err := huh.NewInput().Title(fmt.Sprintf("%s %s", i18n.T(language, "Config.Container.ESpace"), i18n.T(language, "Config.Container.ESpace.Port"))).Value(&port).Validate(utils.ValidateNumber("port")).Run(); err != nil {
+				return err
+			}
+
+			portInt, _ := strconv.Atoi(port)
+			cfg.ESpace.Port = portInt
+
+		}
+	}
+
 	return nil
 }
