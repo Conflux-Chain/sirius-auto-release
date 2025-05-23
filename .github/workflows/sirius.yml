@@ -8,7 +8,7 @@ on:
       - "v*"
 
 env:
-  PACKAGE_DIR_NAME: "sirius-dir"
+  PACKAGE_DIR_NAME: "sirius"
   BINARY_NAME: "sirius"
 
 jobs:
@@ -49,13 +49,11 @@ jobs:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
         run: |
-          go build -o ${{ steps.set_names.outputs.BINARY_WITH_EXT }}
+          go build -o "${{ env.PACKAGE_DIR_NAME }}/${{ steps.set_names.outputs.BINARY_WITH_EXT }}"
 
       - name: create dir
         shell: bash
         run: |
-          mkdir -p ${{ env.PACKAGE_DIR_NAME }}
-          mv ${{ steps.set_names.outputs.BINARY_WITH_EXT }} ${{ env.PACKAGE_DIR_NAME }}/
           echo "Copy config files"
           cp ./configs/* ${{ env.PACKAGE_DIR_NAME }}/
           echo "Copy README"
