@@ -75,3 +75,4 @@ jobs:
           artifacts: "${{ steps.set_names.outputs.ARCHIVE_NAME }}"
           tag: ${{ github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
