@@ -55,7 +55,8 @@ jobs:
         shell: bash
         run: |
           echo "Copy config files"
-          cp ./configs/* ${{ env.PACKAGE_DIR_NAME }}/
+          mkdir -p ${{ env.PACKAGE_DIR_NAME }}/configs
+          cp ./configs/* ${{ env.PACKAGE_DIR_NAME }}/configs/
           echo "Copy README"
           cp ./README.md ${{ env.PACKAGE_DIR_NAME }}/
 
