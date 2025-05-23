@@ -1,0 +1,77 @@
+name: release-sirius
+
+permissions:
+  contents: write
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  PACKAGE_DIR_NAME: "sirius"
+  BINARY_NAME: "sirius"
+
+jobs:
+  build-and-release:
+    name: Build for ${{ matrix.goos }}/${{ matrix.goarch }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+            os: ubuntu-24.04
+          - goos: windows
+            goarch: amd64
+            os: windows-2022
+          - goos: darwin
+            goarch: amd64
+            os: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.3
+      - name: Set output binary name and package name
+        id: set_names
+        shell: bash
+        run: |
+          BINARY_NAME="${{ env.BINARY_NAME }}"
+          if [ "${{ matrix.goos }}" == "windows" ]; then
+            BINARY_NAME="${BINARY_NAME}.exe"
+          fi
+          echo "BINARY_WITH_EXT=${BINARY_NAME}" >> $GITHUB_OUTPUT
+          echo "ARCHIVE_NAME=${{ env.BINARY_NAME }}-${{ matrix.goos }}-${{ matrix.goarch }}.zip" >> $GITHUB_OUTPUT
+
+      - name: build
+        shell: bash
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          go build -o ${{ steps.set_names.outputs.BINARY_WITH_EXT }}
+
+      - name: create dir
+        shell: bash
+        run: |
+          mkdir -p ${{ env.PACKAGE_DIR_NAME }}
+          mv ${{ steps.set_names.outputs.BINARY_WITH_EXT }} ${{ env.PACKAGE_DIR_NAME }}/
+          echo "Copy config files"
+          cp ./configs/* ${{ env.PACKAGE_DIR_NAME }}/
+          echo "Copy README"
+          cp ./README.md ${{ env.PACKAGE_DIR_NAME }}/
+
+      - name: Compress package folder (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: zip -r ${{ steps.set_names.outputs.ARCHIVE_NAME }} ${{ env.PACKAGE_DIR_NAME }}
+
+      - name: Compress package folder (Windows)
+        if: runner.os == 'Windows'
+        run: Compress-Archive -Path ./${{ env.PACKAGE_DIR_NAME }} -DestinationPath ${{ steps.set_names.outputs.ARCHIVE_NAME }} -Force
+
+      - name: Upload Release Asset
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ steps.set_names.outputs.ARCHIVE_NAME }}"
+          tag: ${{ github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
