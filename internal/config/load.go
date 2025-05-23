@@ -1,23 +1,19 @@
 package config
 
 import (
-	"github.com/spf13/viper"
+	"os"
+
+	"github.com/pelletier/go-toml/v2"
 )
 
 func LoadConfig(configFilePath string) (Config, error) {
-
-	v := viper.New()
-
-	v.SetConfigType("toml")
-
-	v.SetConfigFile(configFilePath)
-
-	if err := v.ReadInConfig(); err != nil {
+	data, err := os.ReadFile(configFilePath)
+	if err != nil {
 		return Config{}, err
 	}
 
 	var config Config
-	if err := v.Unmarshal(&config); err != nil {
+	if err := toml.Unmarshal(data, &config); err != nil {
 		return Config{}, err
 	}
 

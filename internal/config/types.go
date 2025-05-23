@@ -3,119 +3,119 @@ package config
 import "Conflux-Chain/sirius-auto-release/internal/i18n"
 
 type WalletConfig struct {
-	ChainID           int      `mapstructure:"chainId" toml:"chainId" huh_en:"Please input a chain id" huh_zh:"请输入链 ID"`
-	ChainName         string   `mapstructure:"chainName" toml:"chainName" huh_en:"Please input a chain name" huh_zh:"请输入链名称"`
-	RpcUrls           []string `mapstructure:"rpcUrls" toml:"rpcUrls" huh_en:"Please input a rpc urls" huh_zh:"请输入 rpc 地址"`
-	BlockExplorerUrls []string `mapstructure:"blockExplorerUrls" toml:"blockExplorerUrls" huh_en:"Please input a block explorer urls" huh_zh:"请输入区块浏览器地址"`
+	ChainID           int      `toml:"chainId" huh_en:"Please input a chain id" huh_zh:"请输入链 ID"`
+	ChainName         string   `toml:"chainName" huh_en:"Please input a chain name" huh_zh:"请输入链名称"`
+	RpcUrls           []string `toml:"rpcUrls" huh_en:"Please input a rpc urls" huh_zh:"请输入 rpc 地址"`
+	BlockExplorerUrls []string `toml:"blockExplorerUrls" huh_en:"Please input a block explorer urls" huh_zh:"请输入区块浏览器地址"`
 	NativeCurrency    struct {
-		Name     string `mapstructure:"name" toml:"name" huh_en:"Please input a native currency name" huh_zh:"请输入原生货币名称"`
-		Symbol   string `mapstructure:"symbol" toml:"symbol" huh_en:"Please input a native currency symbol" huh_zh:"请输入本地货币符号"`
-		Decimals int    `mapstructure:"decimals" toml:"decimals" huh_en:"Please input a native currency decimals" huh_zh:"请输入本地货币小数位数"`
-	} `mapstructure:"nativeCurrency"`
+		Name     string `toml:"name" huh_en:"Please input a native currency name" huh_zh:"请输入原生货币名称"`
+		Symbol   string `toml:"symbol" huh_en:"Please input a native currency symbol" huh_zh:"请输入本地货币符号"`
+		Decimals int    `toml:"decimals" huh_en:"Please input a native currency decimals" huh_zh:"请输入本地货币小数位数"`
+	} `toml:"nativeCurrency"`
 }
 
 type ThemeConfig struct {
-	Primary              string   `mapstructure:"primary,omitempty"`
-	AntdPrimaryButtonBg  string   `mapstructure:"antdPrimaryButtonBg,omitempty"`
-	ButtonBg             string   `mapstructure:"buttonBg,omitempty"`
-	OutlineColor         string   `mapstructure:"outlineColor,omitempty"`
-	ShadowColor          string   `mapstructure:"shadowColor,omitempty"`
-	SearchButtonBg       string   `mapstructure:"searchButtonBg,omitempty"`
-	SearchButtonHoverBg  string   `mapstructure:"searchButtonHoverBg,omitempty"`
-	GasPriceLineBg       string   `mapstructure:"gasPriceLineBg,omitempty"`
-	FooterBg             string   `mapstructure:"footerBg,omitempty"`
-	FooterHighLightColor string   `mapstructure:"footerHighLightColor,omitempty"`
-	LinkColor            string   `mapstructure:"linkColor,omitempty"`
-	LinkHoverColor       string   `mapstructure:"linkHoverColor,omitempty"`
-	ChartColors          []string `mapstructure:"chartColors,omitempty"`
-	MixedChartColors     []string `mapstructure:"mixedChartColors,omitempty"`
-	PieChartColors       []string `mapstructure:"pieChartColors,omitempty"`
-	ChartTitleColor      string   `mapstructure:"chartTitleColor,omitempty"`
-	ChartDetailLinkColor string   `mapstructure:"chartDetailLinkColor,omitempty"`
+	Primary              string   `toml:"primary,omitempty"`
+	AntdPrimaryButtonBg  string   `toml:"antdPrimaryButtonBg,omitempty"`
+	ButtonBg             string   `toml:"buttonBg,omitempty"`
+	OutlineColor         string   `toml:"outlineColor,omitempty"`
+	ShadowColor          string   `toml:"shadowColor,omitempty"`
+	SearchButtonBg       string   `toml:"searchButtonBg,omitempty"`
+	SearchButtonHoverBg  string   `toml:"searchButtonHoverBg,omitempty"`
+	GasPriceLineBg       string   `toml:"gasPriceLineBg,omitempty"`
+	FooterBg             string   `toml:"footerBg,omitempty"`
+	FooterHighLightColor string   `toml:"footerHighLightColor,omitempty"`
+	LinkColor            string   `toml:"linkColor,omitempty"`
+	LinkHoverColor       string   `toml:"linkHoverColor,omitempty"`
+	ChartColors          []string `toml:"chartColors,omitempty"`
+	MixedChartColors     []string `toml:"mixedChartColors,omitempty"`
+	PieChartColors       []string `toml:"pieChartColors,omitempty"`
+	ChartTitleColor      string   `toml:"chartTitleColor,omitempty"`
+	ChartDetailLinkColor string   `toml:"chartDetailLinkColor,omitempty"`
 }
 
 type IconsConfig struct {
-	ImgArrow string `mapstructure:"imgArrow,omitempty"`
+	ImgArrow string `toml:"imgArrow,omitempty"`
 }
 
 type CoreSpaceSettings struct {
-	Enabled                      bool   `mapstructure:"enabled,omitempty" json:"-" huh_en:"Enable Core Space Settings" huh_zh:"是否启用 Core Space 设置"`
-	EnvOpenApiHost               string `mapstructure:"ENV_OPEN_API_HOST,omitempty" toml:"ENV_OPEN_API_HOST" json:"ENV_OPEN_API_HOST" huh_en:"Please input a Open API host" huh_zh:"请输入 Open API 地址"`
-	EnvRpcServer                 string `mapstructure:"ENV_RPC_SERVER,omitempty" toml:"ENV_RPC_SERVER" json:"ENV_RPC_SERVER" huh_en:"Please input a RPC server" huh_zh:"请输入 RPC 服务器"`
-	EnvNetworkID                 int    `mapstructure:"ENV_NETWORK_ID,omitempty" toml:"ENV_NETWORK_ID" json:"ENV_NETWORK_ID" huh_en:"Please input a Network ID" huh_zh:"请输入网络 ID"`
-	EnvNetworkType               string `mapstructure:"ENV_NETWORK_TYPE,omitempty" toml:"ENV_NETWORK_TYPE" json:"ENV_NETWORK_TYPE" huh_en:"Please input a Network Type" huh_zh:"请输入网络类型"`
-	EnvChainType                 string `mapstructure:"ENV_CHAIN_TYPE,omitempty" toml:"ENV_CHAIN_TYPE" json:"ENV_CHAIN_TYPE" huh_en:"Please select a Chain Type" huh_zh:"请选择链类型"`
-	EnvFcAddress                 string `mapstructure:"ENV_FC_ADDRESS,omitempty" toml:"ENV_FC_ADDRESS" json:"ENV_FC_ADDRESS" huh_en:"Please input a FC address" huh_zh:"请输入 FC 地址"`
-	EnvFcExchangeAddress         string `mapstructure:"ENV_FC_EXCHANGE_ADDRESS,omitempty" toml:"ENV_FC_EXCHANGE_ADDRESS" json:"ENV_FC_EXCHANGE_ADDRESS" huh_en:"Please input a FC exchange address" huh_zh:"请输入 FC 交易所地址"`
-	EnvFcExchangeInterestAddress string `mapstructure:"ENV_FC_EXCHANGE_INTEREST_ADDRESS,omitempty" toml:"ENV_FC_EXCHANGE_INTEREST_ADDRESS" json:"ENV_FC_EXCHANGE_INTEREST_ADDRESS" huh_en:"Please input a FC exchange interest address" huh_zh:"请输入 FC 交易所利息地址"`
-	EnvEnsRegistryAddress        string `mapstructure:"ENV_ENS_REGISTRY_ADDRESS,omitempty" toml:"ENV_ENS_REGISTRY_ADDRESS" json:"ENV_ENS_REGISTRY_ADDRESS" huh_en:"Please input a ENS registry address" huh_zh:"请输入 ENS 注册表地址"`
-	EnvEnsPublicResolverAddress  string `mapstructure:"ENV_ENS_PUBLIC_RESOLVER_ADDRESS,omitempty" toml:"ENV_ENS_PUBLIC_RESOLVER_ADDRESS" json:"ENV_ENS_PUBLIC_RESOLVER_ADDRESS" huh_en:"Please input a ENS public resolver address" huh_zh:"请输入 ENS 公共解析器地址"`
-	EnvLogo                      string `mapstructure:"ENV_LOGO,omitempty" toml:"ENV_LOGO" json:"ENV_LOGO" huh_en:"Please input a logo" huh_zh:"请输入 logo"`
+	Enabled                      bool   `toml:"enabled,omitempty" json:"-" huh_en:"Enable Core Space Settings" huh_zh:"是否启用 Core Space 设置"`
+	EnvOpenApiHost               string `toml:"ENV_OPEN_API_HOST,omitempty" toml:"ENV_OPEN_API_HOST" json:"ENV_OPEN_API_HOST" huh_en:"Please input a Open API host" huh_zh:"请输入 Open API 地址"`
+	EnvRpcServer                 string `toml:"ENV_RPC_SERVER,omitempty" toml:"ENV_RPC_SERVER" json:"ENV_RPC_SERVER" huh_en:"Please input a RPC server" huh_zh:"请输入 RPC 服务器"`
+	EnvNetworkID                 int    `toml:"ENV_NETWORK_ID,omitempty" toml:"ENV_NETWORK_ID" json:"ENV_NETWORK_ID" huh_en:"Please input a Network ID" huh_zh:"请输入网络 ID"`
+	EnvNetworkType               string `toml:"ENV_NETWORK_TYPE,omitempty" toml:"ENV_NETWORK_TYPE" json:"ENV_NETWORK_TYPE" huh_en:"Please input a Network Type" huh_zh:"请输入网络类型"`
+	EnvChainType                 string `toml:"ENV_CHAIN_TYPE,omitempty" toml:"ENV_CHAIN_TYPE" json:"ENV_CHAIN_TYPE" huh_en:"Please select a Chain Type" huh_zh:"请选择链类型"`
+	EnvFcAddress                 string `toml:"ENV_FC_ADDRESS,omitempty" toml:"ENV_FC_ADDRESS" json:"ENV_FC_ADDRESS" huh_en:"Please input a FC address" huh_zh:"请输入 FC 地址"`
+	EnvFcExchangeAddress         string `toml:"ENV_FC_EXCHANGE_ADDRESS,omitempty" toml:"ENV_FC_EXCHANGE_ADDRESS" json:"ENV_FC_EXCHANGE_ADDRESS" huh_en:"Please input a FC exchange address" huh_zh:"请输入 FC 交易所地址"`
+	EnvFcExchangeInterestAddress string `toml:"ENV_FC_EXCHANGE_INTEREST_ADDRESS,omitempty" toml:"ENV_FC_EXCHANGE_INTEREST_ADDRESS" json:"ENV_FC_EXCHANGE_INTEREST_ADDRESS" huh_en:"Please input a FC exchange interest address" huh_zh:"请输入 FC 交易所利息地址"`
+	EnvEnsRegistryAddress        string `toml:"ENV_ENS_REGISTRY_ADDRESS,omitempty" toml:"ENV_ENS_REGISTRY_ADDRESS" json:"ENV_ENS_REGISTRY_ADDRESS" huh_en:"Please input a ENS registry address" huh_zh:"请输入 ENS 注册表地址"`
+	EnvEnsPublicResolverAddress  string `toml:"ENV_ENS_PUBLIC_RESOLVER_ADDRESS,omitempty" toml:"ENV_ENS_PUBLIC_RESOLVER_ADDRESS" json:"ENV_ENS_PUBLIC_RESOLVER_ADDRESS" huh_en:"Please input a ENS public resolver address" huh_zh:"请输入 ENS 公共解析器地址"`
+	EnvLogo                      string `toml:"ENV_LOGO,omitempty" toml:"ENV_LOGO" json:"ENV_LOGO" huh_en:"Please input a logo" huh_zh:"请输入 logo"`
 }
 
 type ESpaceSettings struct {
-	Enabled         bool              `mapstructure:"enabled,omitempty" json:"-" huh_en:"Enable E Space Settings" huh_zh:"是否启用 E Space 设置"`
-	EnvApiHost      string            `mapstructure:"ENV_API_HOST,omitempty" toml:"ENV_API_HOST" json:"ENV_API_HOST" huh_en:"Please input a API host" huh_zh:"请输入 API 地址"`
-	EnvCoreApiHost  string            `mapstructure:"ENV_CORE_API_HOST,omitempty" toml:"ENV_CORE_API_HOST" json:"ENV_CORE_API_HOST" huh_en:"Please input a Core API host" huh_zh:"请输入 Core API 地址"`
-	EnvCoreScanHost string            `mapstructure:"ENV_CORE_SCAN_HOST,omitempty" toml:"ENV_CORE_SCAN_HOST" json:"ENV_CORE_SCAN_HOST" huh_en:"Please input a Core Scan host" huh_zh:"请输入 Core 扫描地址"`
-	EnvRpcServer    string            `mapstructure:"ENV_RPC_SERVER,omitempty" toml:"ENV_RPC_SERVER" json:"ENV_RPC_SERVER" huh_en:"Please input a RPC server" huh_zh:"请输入 RPC 地址"`
-	EnvNetworkID    int               `mapstructure:"ENV_NETWORK_ID,omitempty" toml:"ENV_NETWORK_ID" json:"ENV_NETWORK_ID" huh_en:"Please input a Network ID" huh_zh:"请输入网络 ID"`
-	EnvNetworkType  string            `mapstructure:"ENV_NETWORK_TYPE,omitempty" toml:"ENV_NETWORK_TYPE" json:"ENV_NETWORK_TYPE" huh_en:"Please input a Network Type" huh_zh:"请输入网络类型"`
-	EnvChainType    string            `mapstructure:"ENV_CHAIN_TYPE,omitempty" toml:"ENV_CHAIN_TYPE" json:"ENV_CHAIN_TYPE" huh_en:"Please select a Chain Type" huh_zh:"请选择链类型"`
-	EnvWalletConfig WalletConfig      `mapstructure:"ENV_WALLET_CONFIG,omitempty" json:"ENV_WALLET_CONFIG"`
-	EnvLogo         string            `mapstructure:"ENV_LOGO,omitempty" toml:"ENV_LOGO" json:"ENV_LOGO" huh_en:"Please input a logo" huh_zh:"请输入 logo"`
-	EnvTheme        ThemeConfig       `mapstructure:"ENV_THEME,omitempty" toml:"ENV_THEME" json:"ENV_THEME"`
-	EnvIcons        IconsConfig       `mapstructure:"ENV_ICONS,omitempty" toml:"ENV_ICONS" json:"ENV_ICONS"`
-	EnvLocalesEn    map[string]string `mapstructure:"ENV_LOCALES_EN,omitempty" toml:"ENV_LOCALES_EN" json:"ENV_LOCALES_EN"`
-	EnvLocalesCn    map[string]string `mapstructure:"ENV_LOCALES_CN,omitempty" toml:"ENV_LOCALES_CN" json:"ENV_LOCALES_CN"`
+	Enabled         bool              `toml:"enabled,omitempty" json:"-" huh_en:"Enable E Space Settings" huh_zh:"是否启用 E Space 设置"`
+	EnvApiHost      string            `toml:"ENV_API_HOST,omitempty" toml:"ENV_API_HOST" json:"ENV_API_HOST" huh_en:"Please input a API host" huh_zh:"请输入 API 地址"`
+	EnvCoreApiHost  string            `toml:"ENV_CORE_API_HOST,omitempty" toml:"ENV_CORE_API_HOST" json:"ENV_CORE_API_HOST" huh_en:"Please input a Core API host" huh_zh:"请输入 Core API 地址"`
+	EnvCoreScanHost string            `toml:"ENV_CORE_SCAN_HOST,omitempty" toml:"ENV_CORE_SCAN_HOST" json:"ENV_CORE_SCAN_HOST" huh_en:"Please input a Core Scan host" huh_zh:"请输入 Core 扫描地址"`
+	EnvRpcServer    string            `toml:"ENV_RPC_SERVER,omitempty" toml:"ENV_RPC_SERVER" json:"ENV_RPC_SERVER" huh_en:"Please input a RPC server" huh_zh:"请输入 RPC 地址"`
+	EnvNetworkID    int               `toml:"ENV_NETWORK_ID,omitempty" toml:"ENV_NETWORK_ID" json:"ENV_NETWORK_ID" huh_en:"Please input a Network ID" huh_zh:"请输入网络 ID"`
+	EnvNetworkType  string            `toml:"ENV_NETWORK_TYPE,omitempty" toml:"ENV_NETWORK_TYPE" json:"ENV_NETWORK_TYPE" huh_en:"Please input a Network Type" huh_zh:"请输入网络类型"`
+	EnvChainType    string            `toml:"ENV_CHAIN_TYPE,omitempty" toml:"ENV_CHAIN_TYPE" json:"ENV_CHAIN_TYPE" huh_en:"Please select a Chain Type" huh_zh:"请选择链类型"`
+	EnvWalletConfig WalletConfig      `toml:"ENV_WALLET_CONFIG,omitempty" json:"ENV_WALLET_CONFIG"`
+	EnvLogo         string            `toml:"ENV_LOGO,omitempty" toml:"ENV_LOGO" json:"ENV_LOGO" huh_en:"Please input a logo" huh_zh:"请输入 logo"`
+	EnvTheme        ThemeConfig       `toml:"ENV_THEME,omitempty" toml:"ENV_THEME" json:"ENV_THEME"`
+	EnvIcons        IconsConfig       `toml:"ENV_ICONS,omitempty" toml:"ENV_ICONS" json:"ENV_ICONS"`
+	EnvLocalesEn    map[string]string `toml:"ENV_LOCALES_EN,omitempty" toml:"ENV_LOCALES_EN" json:"ENV_LOCALES_EN"`
+	EnvLocalesCn    map[string]string `toml:"ENV_LOCALES_CN,omitempty" toml:"ENV_LOCALES_CN" json:"ENV_LOCALES_CN"`
 }
 
 type Frontend struct {
-	Type string `mapstructure:"type" toml:"type" huh_en:"Please select a frontend type" huh_zh:"请选择前端类型"`
-	// SiriusRepo        string            `mapstructure:"sirius_repo,omitempty"`
-	// SiriusEthRepo     string            `mapstructure:"sirius_eth_repo,omitempty"`
-	PrebuiltRepo      string            `mapstructure:"prebuilt_repo,omitempty" toml:"prebuilt_repo" huh_en:"Please input a prebuilt repo" huh_zh:"请输入预构建的仓库"`
-	CoreSpaceSettings CoreSpaceSettings `mapstructure:"core_space_settings,omitempty" toml:"core_space_settings"`
-	ESpaceSettings    ESpaceSettings    `mapstructure:"e_space_settings,omitempty" toml:"e_space_settings"`
+	Type string `toml:"type" huh_en:"Please select a frontend type" huh_zh:"请选择前端类型"`
+	// SiriusRepo        string            `toml:"sirius_repo,omitempty"`
+	// SiriusEthRepo     string            `toml:"sirius_eth_repo,omitempty"`
+	PrebuiltRepo      string            `toml:"prebuilt_repo" huh_en:"Please input a prebuilt repo" huh_zh:"请输入预构建的仓库"`
+	CoreSpaceSettings CoreSpaceSettings `toml:"core_space_settings"`
+	ESpaceSettings    ESpaceSettings    `toml:"e_space_settings"`
 }
 
 type Global struct {
-	Version int    `mapstructure:"version"`
-	Space   string `mapstructure:"space" toml:"space" huh_en:"Please select a Space" huh_zh:"请选择要使用的 Space"`
-	Workdir string `mapstructure:"workdir" toml:"workdir" huh_en:"Please select a workdir" huh_zh:"请选择工作目录"`
+	Version int    `toml:"version"`
+	Space   string `toml:"space" huh_en:"Please select a Space" huh_zh:"请选择要使用的 Space"`
+	Workdir string ` toml:"workdir" huh_en:"Please select a workdir" huh_zh:"请选择工作目录"`
 }
 
 type ProxySpace struct {
-	Port    int    `mapstructure:"port" toml:"port" huh_en:"Please input a port" huh_zh:"请输入端口号"`
-	API_URL string `mapstructure:"api_url" toml:"api_url" huh_en:"Please input a proxy API URL" huh_zh:"请输入代理 API 地址"`
+	Port    int    `toml:"port" huh_en:"Please input a port" huh_zh:"请输入端口号"`
+	API_URL string `toml:"api_url" huh_en:"Please input a proxy API URL" huh_zh:"请输入代理 API 地址"`
 }
 
 type Proxy struct {
-	Enabled   bool       `mapstructure:"enabled" toml:"enabled" huh_en:"Enable Proxy" huh_zh:"是否启用代理"`
-	Type      string     `mapstructure:"type" toml:"type"`
-	CoreSpace ProxySpace `mapstructure:"core_space" toml:"core_space" huh_en:"core space" huh_zh:"core space"`
-	ESpace    ProxySpace `mapstructure:"e_space" toml:"e_space" huh_en:"ESpace" huh_zh:"ESpace"`
+	Enabled   bool       `toml:"enabled" huh_en:"Enable Proxy" huh_zh:"是否启用代理"`
+	Type      string     `toml:"type"`
+	CoreSpace ProxySpace `toml:"core_space" huh_en:"core space" huh_zh:"core space"`
+	ESpace    ProxySpace `toml:"e_space" huh_en:"ESpace" huh_zh:"ESpace"`
 }
 
 type ContainerSpace struct {
-	Port int `mapstructure:"port" toml:"port" huh_en:"Please input a port" huh_zh:"请输入端口号"`
+	Port int `toml:"port" huh_en:"Please input a port" huh_zh:"请输入端口号"`
 }
 
 type Container struct {
-	Enabled bool   `mapstructure:"enabled" toml:"enabled" huh_en:"Enable Container" huh_zh:"是否启用容器"`
-	Type    string `mapstructure:"type" toml:"type"`
-	Name    string `mapstructure:"name" toml:"name" huh_en:"Please input a container name" huh_zh:"请输入容器名称"`
-	Tag     string `mapstructure:"tag" toml:"tag" huh_en:"Please input a container tag" huh_zh:"请输入容器标签"`
+	Enabled bool   `toml:"enabled" huh_en:"Enable Container" huh_zh:"是否启用容器"`
+	Type    string `toml:"type"`
+	Name    string `toml:"name" huh_en:"Please input a container name" huh_zh:"请输入容器名称"`
+	Tag     string `toml:"tag" huh_en:"Please input a container tag" huh_zh:"请输入容器标签"`
 
-	CoreSpace ContainerSpace `mapstructure:"core_space" toml:"core_space" huh_en:"core space" huh_zh:"core space"`
-	ESpace    ContainerSpace `mapstructure:"e_space" toml:"e_space" huh_en:"ESpace" huh_zh:"ESpace"`
+	CoreSpace ContainerSpace `toml:"core_space" huh_en:"core space" huh_zh:"core space"`
+	ESpace    ContainerSpace `toml:"e_space" huh_en:"ESpace" huh_zh:"ESpace"`
 }
 
 type Config struct {
-	Global    Global    `mapstructure:"global" toml:"global"`
-	Frontend  Frontend  `mapstructure:"frontend" toml:"frontend"`
-	Proxy     Proxy     `mapstructure:"proxy" toml:"proxy"`
-	Container Container `mapstructure:"container" toml:"container"`
+	Global    Global    `toml:"global"`
+	Frontend  Frontend  `toml:"frontend"`
+	Proxy     Proxy     `toml:"proxy"`
+	Container Container `toml:"container"`
 }
 
 func init() {

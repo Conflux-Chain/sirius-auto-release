@@ -57,9 +57,6 @@ var initCmd = &cobra.Command{
 			path = outputConfigFile
 		}
 
-		sv := viper.New()
-		sv.SetConfigType("toml")
-
 		tomlBytes, err := toml.Marshal(useConfig)
 
 		if err := utils.WriteToFile(tomlBytes, path); err != nil {

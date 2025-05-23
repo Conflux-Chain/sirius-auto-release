@@ -6,7 +6,7 @@ This project is to automatically build conflux core space and eSpace scan, and y
 
 ## Use Pre-build assets
 
-You can download the pre-build assets from [release](https://github.com/Conflux-Chain/scan-auto-release/releases) page, `scan.zip` is Conflux core space and `scan-eth.zip` is Conflux eSpace
+You can download the pre-build assets from [release](https://github.com/Conflux-Chain/sirius-auto-release/releases) page, `scan.zip` is Conflux core space and `scan-eth.zip` is Conflux eSpace
 
 ## Sirius CLI
 
