@@ -8,7 +8,7 @@ on:
       - "v*"
 
 env:
-  PACKAGE_DIR_NAME: "sirius"
+  PACKAGE_DIR_NAME: "sirius-dir"
   BINARY_NAME: "sirius"
 
 jobs:
