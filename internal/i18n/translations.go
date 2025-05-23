@@ -70,14 +70,3 @@ func extractStructTranslations(objType reflect.Type, prefix string) {
 		}
 	}
 }
-
-func DumpTranslations() {
-	fmt.Println("=== Current Translations ===")
-	for lang, messages := range translations {
-		fmt.Printf("Language: %s\n", lang)
-		for k, v := range messages {
-			fmt.Printf("  %s: %s\n", k, v)
-		}
-	}
-	fmt.Println("===========================")
-}

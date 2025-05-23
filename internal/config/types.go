@@ -120,5 +120,4 @@ type Config struct {
 
 func init() {
 	i18n.ExtractAllTranslations(Config{})
-	i18n.DumpTranslations()
 }
