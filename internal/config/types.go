@@ -39,6 +39,7 @@ type IconsConfig struct {
 }
 
 type CoreSpaceSettings struct {
+	API_URL                      string `toml:"api_url" huh_en:"Please input a proxy API URL" huh_zh:"请输入代理 API 地址"`
 	Enabled                      bool   `toml:"enabled,omitempty" json:"-" huh_en:"Enable Core Space Settings" huh_zh:"是否启用 Core Space 设置"`
 	EnvOpenApiHost               string `toml:"ENV_OPEN_API_HOST,omitempty" toml:"ENV_OPEN_API_HOST" json:"ENV_OPEN_API_HOST" huh_en:"Please input a Open API host" huh_zh:"请输入 Open API 地址"`
 	EnvRpcServer                 string `toml:"ENV_RPC_SERVER,omitempty" toml:"ENV_RPC_SERVER" json:"ENV_RPC_SERVER" huh_en:"Please input a RPC server" huh_zh:"请输入 RPC 服务器"`
@@ -54,6 +55,7 @@ type CoreSpaceSettings struct {
 }
 
 type ESpaceSettings struct {
+	API_URL         string            `toml:"api_url" huh_en:"Please input a proxy API URL" huh_zh:"请输入代理 API 地址"`
 	Enabled         bool              `toml:"enabled,omitempty" json:"-" huh_en:"Enable E Space Settings" huh_zh:"是否启用 E Space 设置"`
 	EnvApiHost      string            `toml:"ENV_API_HOST,omitempty" toml:"ENV_API_HOST" json:"ENV_API_HOST" huh_en:"Please input a API host" huh_zh:"请输入 API 地址"`
 	EnvCoreApiHost  string            `toml:"ENV_CORE_API_HOST,omitempty" toml:"ENV_CORE_API_HOST" json:"ENV_CORE_API_HOST" huh_en:"Please input a Core API host" huh_zh:"请输入 Core API 地址"`
@@ -86,8 +88,7 @@ type Global struct {
 }
 
 type ProxySpace struct {
-	Port    int    `toml:"port" huh_en:"Please input a port" huh_zh:"请输入端口号"`
-	API_URL string `toml:"api_url" huh_en:"Please input a proxy API URL" huh_zh:"请输入代理 API 地址"`
+	Port int `toml:"port" huh_en:"Please input a port" huh_zh:"请输入端口号"`
 }
 
 type Proxy struct {

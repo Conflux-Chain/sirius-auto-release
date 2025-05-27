@@ -76,6 +76,14 @@ _prompt.description.zh = "Core Space 后端服务地址。需要从此地址请�
 _prompt.type = "input"
 
 
+[frontend.core_space_settings.enable]
+value = true
+_prompt.title.en = "Enable Core Space Setting"
+_prompt.title.zh = "启用 Core Space 设置"
+_prompt.description.en = "Enable custom settings for Core Space"
+_prompt.description.zh = "是否启用 Core Space 的自定义设置"
+_prompt.type = "confirm"
+
 [frontend.core_space_settings.ENV_OPEN_API_HOST]
 value = "https://api-testnet.confluxscan.net"
 _prompt.title.en = "Core Space Open API Host"
@@ -177,6 +185,14 @@ _prompt.title.zh = "eSpace API 地址"
 _prompt.description.en = "Backend API URL for eSpace. Endpoints like /v1, /stat will be requested from this URL. If Docker is enabled, Nginx will proxy these requests internally."
 _prompt.description.zh = "eSpace 后端服务地址。需要从此地址请求 /v1、/stat 等接口。如果启用 Docker，Nginx 将在内部代理这些请求。"
 _prompt.type = "input"
+
+[frontend.e_space_settings.enable]
+value = true
+_prompt.title.en = "Enable ESpace Setting"
+_prompt.title.zh = "启用  ESpace 设置"
+_prompt.description.en = "Enable custom settings for ESpace"
+_prompt.description.zh = "是否启用 ESpace 的自定义设置"
+_prompt.type = "confirm"
 
 [frontend.e_space_settings.ENV_API_HOST]
 value = "https://evmapi-testnet.confluxscan.net"
