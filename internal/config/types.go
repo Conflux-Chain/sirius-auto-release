@@ -92,7 +92,6 @@ type ProxySpace struct {
 }
 
 type Proxy struct {
-	Enabled   bool       `toml:"enabled" huh_en:"Enable Proxy" huh_zh:"是否启用代理"`
 	Type      string     `toml:"type"`
 	CoreSpace ProxySpace `toml:"core_space" huh_en:"core space" huh_zh:"core space"`
 	ESpace    ProxySpace `toml:"e_space" huh_en:"ESpace" huh_zh:"ESpace"`

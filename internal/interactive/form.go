@@ -43,6 +43,26 @@ func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, language
 		return err
 	}
 
+	var apiUrls []huh.Field
+	if globalConfig.Space == config.ALL_SPACE {
+		apiUrls = append(apiUrls,
+			huh.NewInput().Title(i18n.T(language, "Config.Proxy.CoreSpace.API_URL")).Value(&cfg.CoreSpaceSettings.API_URL),
+			huh.NewInput().Title(i18n.T(language, "Config.Proxy.ESpace.API_URL")).Value(&cfg.ESpaceSettings.API_URL),
+		)
+	} else if globalConfig.Space == config.CORE_SPACE {
+		apiUrls = append(apiUrls,
+			huh.NewInput().Title(i18n.T(language, "Config.Proxy.CoreSpace.API_URL")).Value(&cfg.CoreSpaceSettings.API_URL),
+		)
+	} else if globalConfig.Space == config.E_SPACE {
+		apiUrls = append(apiUrls,
+			huh.NewInput().Title(i18n.T(language, "Config.Proxy.ESpace.API_URL")).Value(&cfg.ESpaceSettings.API_URL),
+		)
+	}
+
+	if err := huh.NewForm(huh.NewGroup(apiUrls...)).Run(); err != nil {
+		return err
+	}
+
 	if err := huh.NewConfirm().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.Enabled")).Value(&cfg.CoreSpaceSettings.Enabled).Run(); err != nil {
 		return err
 	}
@@ -146,42 +166,36 @@ func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, language
 
 func runProxyForm(cfg *config.Proxy, globalConfig *config.Global, language string) error {
 
-	if err := huh.NewConfirm().Title(i18n.T(language, "Config.Proxy.Enabled")).Value(&cfg.Enabled).Run(); err != nil {
-		return err
+	cfg.Type = "nginx"
+
+	if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.CORE_SPACE {
+
+		port := ""
+		if err := huh.NewForm(
+			huh.NewGroup(
+				huh.NewInput().Title(i18n.T(language, "Config.Proxy.CoreSpace.Port")).Value(&port).Validate(utils.ValidateNumber("port")),
+			),
+		).Run(); err != nil {
+			return err
+		}
+		portInt, _ := strconv.Atoi(port)
+		cfg.CoreSpace.Port = portInt
 	}
-	if cfg.Enabled {
-		cfg.Type = "nginx"
 
-		if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.CORE_SPACE {
-
-			port := ""
-			if err := huh.NewForm(
-				huh.NewGroup(
-					huh.NewInput().Title(i18n.T(language, "Config.Proxy.CoreSpace.Port")).Value(&port).Validate(utils.ValidateNumber("port")),
-					huh.NewInput().Title(i18n.T(language, "Config.Proxy.CoreSpace.API_URL")).Value(&cfg.CoreSpace.API_URL),
-				),
-			).Run(); err != nil {
-				return err
-			}
-			portInt, _ := strconv.Atoi(port)
-			cfg.CoreSpace.Port = portInt
+	if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.E_SPACE {
+		port := ""
+		if err := huh.NewForm(
+			huh.NewGroup(
+				huh.NewInput().Title(i18n.T(language, "Config.Proxy.ESpace.Port")).Value(&port).Validate(utils.ValidateNumber("port")),
+			),
+		).Run(); err != nil {
+			return err
 		}
 
-		if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.E_SPACE {
-			port := ""
-			if err := huh.NewForm(
-				huh.NewGroup(
-					huh.NewInput().Title(i18n.T(language, "Config.Proxy.ESpace.Port")).Value(&port).Validate(utils.ValidateNumber("port")),
-					huh.NewInput().Title(i18n.T(language, "Config.Proxy.ESpace.API_URL")).Value(&cfg.ESpace.API_URL),
-				),
-			).Run(); err != nil {
-				return err
-			}
-
-			portInt, _ := strconv.Atoi(port)
-			cfg.ESpace.Port = portInt
-		}
+		portInt, _ := strconv.Atoi(port)
+		cfg.ESpace.Port = portInt
 	}
+
 	return nil
 }
 

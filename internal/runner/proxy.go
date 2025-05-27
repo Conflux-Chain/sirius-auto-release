@@ -66,32 +66,32 @@ func writeToFile(content []byte, outPath string) error {
 	return nil
 }
 
-func getServerConfigs(proxyConfig *config.Proxy, globalConfig *config.Global) ([]NginxServerTemplate, error) {
+func getServerConfigs(proxyConfig *config.Proxy, frontendConfig *config.Frontend, globalConfig *config.Global) ([]NginxServerTemplate, error) {
 	var configs []NginxServerTemplate
 
 	switch globalConfig.Space {
 	case "all":
 		configs = append(configs,
 			NginxServerTemplate{
-				APIUrl:     proxyConfig.CoreSpace.API_URL,
+				APIUrl:     frontendConfig.CoreSpaceSettings.API_URL,
 				AssetDir:   "scan/build",
 				ListenPort: proxyConfig.CoreSpace.Port,
 			},
 			NginxServerTemplate{
-				APIUrl:     proxyConfig.ESpace.API_URL,
+				APIUrl:     frontendConfig.ESpaceSettings.API_URL,
 				AssetDir:   "scan-eth/build",
 				ListenPort: proxyConfig.ESpace.Port,
 			},
 		)
 	case "core":
 		configs = append(configs, NginxServerTemplate{
-			APIUrl:     proxyConfig.CoreSpace.API_URL,
+			APIUrl:     frontendConfig.CoreSpaceSettings.API_URL,
 			AssetDir:   "scan/build",
 			ListenPort: proxyConfig.CoreSpace.Port,
 		})
 	case "eSpace":
 		configs = append(configs, NginxServerTemplate{
-			APIUrl:     proxyConfig.ESpace.API_URL,
+			APIUrl:     frontendConfig.ESpaceSettings.API_URL,
 			AssetDir:   "scan-eth/build",
 			ListenPort: proxyConfig.ESpace.Port,
 		})
@@ -102,11 +102,11 @@ func getServerConfigs(proxyConfig *config.Proxy, globalConfig *config.Global) ([
 	return configs, nil
 }
 
-func RunProxyScript(proxyConfig *config.Proxy, globalConfig *config.Global) error {
+func RunProxyScript(proxyConfig *config.Proxy, frontendConfig *config.Frontend, globalConfig *config.Global) error {
 
 	utils.ShowTitle("Proxy")
 
-	configs, err := getServerConfigs(proxyConfig, globalConfig)
+	configs, err := getServerConfigs(proxyConfig, frontendConfig, globalConfig)
 
 	utils.ShowStep(fmt.Sprintf("Generating Nginx configuration for %s space...\n", globalConfig.Space))
 

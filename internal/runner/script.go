@@ -16,18 +16,17 @@ func RunScript(cfg *config.Config) error {
 	}
 	utils.ShowSeparator()
 
-	if cfg.Proxy.Enabled {
-		if err := RunProxyScript(&cfg.Proxy, &cfg.Global); err != nil {
+	if cfg.Container.Enabled {
+		if err := RunProxyScript(&cfg.Proxy, &cfg.Frontend, &cfg.Global); err != nil {
 			return err
 		}
 		utils.ShowSeparator()
-	}
 
-	if cfg.Container.Enabled {
 		if err := RunContainerScript(cfg); err != nil {
 			return err
 		}
 		utils.ShowSeparator()
+
 	}
 
 	// Print help message
