@@ -1,0 +1,386 @@
+# Config version
+[global]
+# The version of this configuration file.
+version = 1
+# Specifies the active space: "core", "eSpace", or "all".
+
+[global.space]
+value = "eSpace"
+_prompt.title.en = "Space to Use"
+_prompt.title.zh = "选择使用的 Space"
+_prompt.description.en = "Select the Space to use for the frontend (Core Space or Ethereum-compatible eSpace)."
+_prompt.description.zh = "选择前端要使用的 Space (核心空间或以太坊兼容空间)。"
+_prompt.type = "select"
+_prompt.options = [
+    { value = "core", label.en = "Core Space", label.zh = "Core Space" },
+    { value = "eSpace", label.en = "eSpace", label.zh = "eSpace" },
+    { value = "all", label.en = "All (Core & eSpace)", label.zh = "全部 (Core & eSpace)" },
+]
+
+# The output directory for generated files.
+[global.workdir]
+value = "./frontend"
+_prompt.title.en = "Output Directory"
+_prompt.title.zh = "输出目录"
+_prompt.description.en = "The directory for generated files and frontend build artifacts."
+_prompt.description.zh = "用于存放生成文件和前端构建产物的目录。"
+_prompt.type = "input"
+
+
+# Frontend settings
+[frontend]
+[frontend.type]
+value = "prebuilt"
+_prompt.title.en = "Frontend Type"
+_prompt.title.zh = "前端类型"
+_prompt.description.en = "'prebuilt' uses downloaded prebuilt files. 'source' builds from source (requires Docker)."
+_prompt.description.zh = "“prebuilt”使用下载的预构建文件。“source”从源码构建（需要 Docker）。"
+_prompt.type = "select"
+_prompt.options = [
+    { value = "prebuilt", label.en = "Prebuilt", label.zh = "预构建" },
+    # { value = "source", label.en = "From Source", label.zh = "源码构建" },
+]
+# [frontend.sirius_repo]
+# value = "https://github.com/Conflux-Chain/sirius.git"
+# _prompt.title.en = "Scan Repository URL (Source)"
+# _prompt.title.zh = "Scan 仓库地址 (源码)"
+# _prompt.description.en = "Git repository URL for Scan frontend source (if type is 'source')."
+# _prompt.description.zh = "Scan 前端源码的 Git 仓库地址（如果类型是“source”）。"
+# _prompt.type = "input"
+
+# [frontend.sirius_eth_repo]
+# value = "https://github.com/Conflux-Chain/sirius-eth.git"
+# _prompt.title.en = "Scan ETH Repository URL (Source)"
+# _prompt.title.zh = "Scan ETH 仓库地址 (源码)"
+# _prompt.description.en = "Git repository URL for Scan ETH frontend source (if type is 'source')."
+# _prompt.description.zh = "Scan ETH 前端源码的 Git 仓库地址（如果类型是“source”）。"
+# _prompt.type = "input"
+
+# Conditional field: only ask if frontend.type is "prebuilt"
+[frontend.prebuilt_repo]
+value = "https://github.com/Conflux-Chain/sirius-auto-release.git"
+_prompt.title.en = "Prebuilt Repository URL"
+_prompt.title.zh = "预构建仓库地址"
+_prompt.description.en = "Git repository URL for prebuilt frontend files."
+_prompt.description.zh = "预构建前端文件的 Git 仓库地址。"
+_prompt.type = "input"
+
+
+[frontend.core_space_settings]
+[frontend.core_space_settings.api_url]
+value = "https://testnet.confluxscan.io"
+_prompt.title.en = "Core Space API URL"
+_prompt.title.zh = "Core Space API 地址"
+_prompt.description.en = "Backend service URL for Core Space. Endpoints like /v1, /stat will be requested from this URL. If Docker is enabled, Nginx will proxy these requests internally."
+_prompt.description.zh = "Core Space 后端服务地址。需要从此地址请求 /v1、/stat 等接口。如果启用 Docker，Nginx 将在内部代理这些请求。"
+_prompt.type = "input"
+
+
+[frontend.core_space_settings.ENV_OPEN_API_HOST]
+value = "https://api-testnet.confluxscan.net"
+_prompt.title.en = "Core Space Open API Host"
+_prompt.title.zh = "Core Space Open API 地址"
+_prompt.description.en = "Request address for Core Space Open API."
+_prompt.description.zh = "Core Space Open API 请求地址。"
+_prompt.type = "input"
+
+
+[frontend.core_space_settings.ENV_RPC_SERVER]
+value = "https://test.confluxrpc.com"
+_prompt.title.en = "Core Space RPC Server"
+_prompt.title.zh = "Core Space RPC 地址"
+_prompt.description.en = "Request address for Core Space RPC."
+_prompt.description.zh = "Core Space RPC 请求地址。"
+_prompt.type = "input"
+
+
+[frontend.core_space_settings.ENV_NETWORK_ID]
+value = 1
+_prompt.title.en = "Network ID"
+_prompt.title.zh = "网络ID"
+_prompt.description.en = "The Network ID corresponding to this Scan instance."
+_prompt.description.zh = "此 Scan 实例对应的网络 ID。"
+_prompt.type = "input"
+
+
+[frontend.core_space_settings.ENV_CHAIN_TYPE]
+value = "TESTNET"
+_prompt.title.en = "Scan Environment"
+_prompt.title.zh = "Scan 环境"
+_prompt.description.en = "The chain environment corresponding to this Scan instance."
+_prompt.description.zh = "此 Scan 实例对应链的环境。"
+_prompt.type = "select"
+_prompt.options = [
+    { value = "MAINNET", label.en = "Mainnet", label.zh = "主网" },
+    { value = "TESTNET", label.en = "Testnet", label.zh = "测试网" },
+    { value = "DEVNET", label.en = "Devnet", label.zh = "开发网" },
+]
+
+[frontend.core_space_settings.ENV_FC_ADDRESS]
+value = "cfxtest:achteu1f777f1j1s8s4tvsx5vk5vcbrn4ykxa0fzg1"
+_prompt.title.en = "FC Contract Address (Optional)"
+_prompt.title.zh = "FC 合约地址 (可选)"
+_prompt.description.en = "Leave blank if FC functionality is not supported."
+_prompt.description.zh = "如果不支持 FC 功能可留空。"
+_prompt.type = "input"
+
+
+[frontend.core_space_settings.ENV_FC_EXCHANGE_ADDRESS]
+value = "cfxtest:acf6wwargxpp9ddfe7rnagf2ty9gsxs54uptst589y"
+_prompt.title.en = "FC Exchange Contract Address (Optional)"
+_prompt.title.zh = "FC Exchange 合约地址 (可选)"
+_prompt.description.en = "Scan's FC exchange contract address. Leave blank if not supported."
+_prompt.description.zh = "Scan 中的 FC Exchange 合约地址，如果不支持可留空。"
+_prompt.type = "input"
+
+
+[frontend.core_space_settings.ENV_FC_EXCHANGE_INTEREST_ADDRESS]
+value = "cfxtest:acadrvdd07u69hazg0nkjkpdetvyc5wma6put8949d"
+_prompt.title.en = "FC Exchange Interest Contract Address (Optional)"
+_prompt.title.zh = "FC Exchange Interest 合约地址 (可选)"
+_prompt.description.en = "FC exchange interest contract address. Leave blank if not supported."
+_prompt.description.zh = "FC Exchange Interest 合约地址，如果不支持可留空。"
+_prompt.type = "input"
+
+
+[frontend.core_space_settings.ENV_ENS_REGISTRY_ADDRESS]
+value = "cfxtest:acemru7fu1u8brtyn3hrtae17kbcd4pd9u2m761bta"
+_prompt.title.en = "ENS Registry Contract Address (Optional)"
+_prompt.title.zh = "ENS 注册合约地址 (可选)"
+_prompt.description.en = "Leave blank if not supported."
+_prompt.description.zh = "如果不支持可留空。"
+_prompt.type = "input"
+
+[frontend.core_space_settings.ENV_ENS_PUBLIC_RESOLVER_ADDRESS]
+value = "cfxtest:acbfyf69zaxau5a23w10dgyrmb0hrz4p9pewn6sejp"
+_prompt.title.en = "ENS Public Resolver Contract Address (Optional)"
+_prompt.title.zh = "ENS Public Resolver 合约地址 (可选)"
+_prompt.description.en = "Leave blank if not supported."
+_prompt.description.zh = "如果不支持可留空。"
+_prompt.type = "input"
+
+[frontend.core_space_settings.ENV_LOGO]
+value = "https://testnet.confluxscan.net/static/media/logo-testnet.135b93ff.svg"
+_prompt.title.en = "Logo URL"
+_prompt.title.zh = "Logo 链接"
+_prompt.description.en = "URL for the logo image."
+_prompt.description.zh = "用于设置 Logo 的图片链接。"
+_prompt.type = "input"
+
+
+# Custom frontend settings for eSpace
+[frontend.e_space_settings]
+[frontend.e_space_settings.api_url]
+value = "https://evmtestnet.confluxscan.org"
+_prompt.title.en = "eSpace API URL"
+_prompt.title.zh = "eSpace API 地址"
+_prompt.description.en = "Backend API URL for eSpace. Endpoints like /v1, /stat will be requested from this URL. If Docker is enabled, Nginx will proxy these requests internally."
+_prompt.description.zh = "eSpace 后端服务地址。需要从此地址请求 /v1、/stat 等接口。如果启用 Docker，Nginx 将在内部代理这些请求。"
+_prompt.type = "input"
+
+[frontend.e_space_settings.ENV_API_HOST]
+value = "https://evmapi-testnet.confluxscan.net"
+_prompt.title.en = "eSpace Open API Host"
+_prompt.title.zh = "eSpace Open API 地址"
+_prompt.description.en = "Request address for eSpace Open API."
+_prompt.description.zh = "eSpace Open API 请求地址。"
+_prompt.type = "input"
+
+
+[frontend.e_space_settings.ENV_CORE_API_HOST]
+value = "https://api-testnet.confluxscan.net"
+_prompt.title.en = "Core Space Open API Host (Optional)"
+_prompt.title.zh = "Core Space Open API 地址 (可选)"
+_prompt.description.en = "Used to request Core Space data. Leave blank if not supported or not applicable."
+_prompt.description.zh = "用于请求 Core Space 的数据，若不支持或不适用可留空。"
+_prompt.type = "input"
+
+[frontend.e_space_settings.ENV_CORE_SCAN_HOST]
+value = "https://testnet.confluxscan.net"
+_prompt.title.en = "Core Space Scan Host (Optional)"
+_prompt.title.zh = "Core Space Scan 主机地址 (可选)"
+_prompt.description.en = "The base URL of the Core Space Scan frontend. Used for linking to Core Space pages. Leave blank if not supported or not applicable."
+_prompt.description.zh = "Core Space Scan 前端页面的主机地址。用于跳转到 Core Space 相关页面，若不支持或不适用可留空。"
+_prompt.type = "input"
+
+[frontend.e_space_settings.ENV_RPC_SERVER]
+value = "https://evmtestnet-cfxbridge.confluxrpc.com"
+_prompt.title.en = "eSpace RPC Server"
+_prompt.title.zh = "eSpace RPC 地址"
+_prompt.description.en = "Address for eSpace RPC requests."
+_prompt.description.zh = "用于请求 eSpace RPC 数据的地址。"
+_prompt.type = "input"
+
+
+[frontend.e_space_settings.ENV_NETWORK_ID]
+value = 71
+_prompt.title.en = "Network ID"
+_prompt.title.zh = "网络 ID"
+_prompt.description.en = "The Network ID corresponding to this Scan instance."
+_prompt.description.zh = "此 Scan 实例对应的网络 ID。"
+_prompt.type = "input"
+
+[frontend.e_space_settings.ENV_CHAIN_TYPE]
+value = "TESTNET"
+_prompt.title.en = "Scan Environment"
+_prompt.title.zh = "Scan 环境"
+_prompt.description.en = "The chain environment corresponding to this Scan instance."
+_prompt.description.zh = "此 Scan 实例对应链的环境。"
+_prompt.type = "select"
+_prompt.options = [
+    { value = "MAINNET", label.en = "Mainnet", label.zh = "主网" },
+    { value = "TESTNET", label.en = "Testnet", label.zh = "测试网" },
+    { value = "DEVNET", label.en = "Devnet", label.zh = "开发网" },
+]
+
+
+[frontend.e_space_settings.ENV_LOGO]
+value = "https://evmtestnet.confluxscan.net/static/media/logo-testnet.6a5c7ce7.svg"
+_prompt.title.en = "Logo URL"
+_prompt.title.zh = "Logo 链接"
+_prompt.description.en = "URL for the logo image."
+_prompt.description.zh = "用于设置 Logo 的图片链接。"
+_prompt.type = "input"
+
+
+[frontend.e_space_settings.ENV_WALLET_CONFIG]
+[frontend.e_space_settings.ENV_WALLET_CONFIG.enable]
+value = true
+_prompt.title.en = "Enable Wallet Configuration"
+_prompt.title.zh = "启用钱包配置"
+_prompt.description.en = "Enable functionality to add this network to a wallet (e.g., MetaMask)."
+_prompt.description.zh = "是否启用将此网络添加到钱包（例如 MetaMask）的功能。"
+_prompt.type = "confirm"
+
+[frontend.e_space_settings.ENV_WALLET_CONFIG.chainId]
+value = 71
+_prompt.title.en = "Chain ID (for Wallet)"
+_prompt.title.zh = "链ID (钱包)"
+_prompt.description.en = "Chain ID for wallet configuration."
+_prompt.description.zh = "钱包配置中的链 ID。"
+_prompt.type = "input"
+
+
+[frontend.e_space_settings.ENV_WALLET_CONFIG.chainName]
+value = "eSpace Testnet"
+_prompt.title.en = "Chain Name (for Wallet)"
+_prompt.title.zh = "链名称 (钱包)"
+_prompt.description.en = "Chain name for wallet configuration."
+_prompt.description.zh = "钱包配置中的链名称。"
+_prompt.type = "input"
+
+[frontend.e_space_settings.ENV_WALLET_CONFIG.rpcUrls]
+value = ["https://evmtestnet.confluxrpc.com"]
+_prompt.title.en = "RPC URLs (for Wallet)"
+_prompt.title.zh = "RPC 地址 (钱包)"
+_prompt.description.en = "RPC URLs for wallet configuration (array format). Example: [\"https://rpc.example.com\"]"
+_prompt.description.zh = "钱包配置中的 RPC URL (数组格式)。例如：[\"https://evmtestnet.confluxrpc.com\"]"
+_prompt.type = "input"
+
+[frontend.e_space_settings.ENV_WALLET_CONFIG.blockExplorerUrls]
+value = ["https://evmtestnet.confluxscan.org"]
+_prompt.title.en = "Block Explorer URLs (for Wallet)"
+_prompt.title.zh = "区块浏览器地址 (钱包)"
+_prompt.description.en = "Block explorer URLs for wallet configuration (array format). Example: [\"https://explorer.example.com\"]"
+_prompt.description.zh = "钱包配置中的区块浏览器 URL (数组格式)。例如：[\"https://evmtestnet.confluxscan.org\"]"
+_prompt.type = "input"
+
+[frontend.e_space_settings.ENV_WALLET_CONFIG.nativeCurrency]
+[frontend.e_space_settings.ENV_WALLET_CONFIG.nativeCurrency.name]
+value = "Conflux"
+_prompt.title.en = "Native Currency Name (for Wallet)"
+_prompt.title.zh = "原生代币名称 (钱包)"
+_prompt.description.en = "Name of the native currency (e.g., Conflux) for wallet configuration."
+_prompt.description.zh = "钱包配置中原生代币的名称（例如 Conflux）。"
+_prompt.type = "input"
+
+[frontend.e_space_settings.ENV_WALLET_CONFIG.nativeCurrency.symbol]
+value = "CFX"
+_prompt.title.en = "Native Currency Symbol (for Wallet)"
+_prompt.title.zh = "原生代币符号 (钱包)"
+_prompt.description.en = "Symbol of the native currency (e.g., CFX) for wallet configuration."
+_prompt.description.zh = "钱包配置中原生代币的符号（例如 CFX）。"
+_prompt.type = "input"
+
+
+[frontend.e_space_settings.ENV_WALLET_CONFIG.nativeCurrency.decimals]
+value = "18"
+_prompt.title.en = "Native Currency Decimals (for Wallet)"
+_prompt.title.zh = "原生代币精度 (钱包)"
+_prompt.description.en = "Decimals of the native currency (e.g., 18) for wallet configuration."
+_prompt.description.zh = "钱包配置中原生代币的精度（例如 18）。"
+_prompt.type = "input"
+
+
+[container]
+[container.enabled]
+value = true
+_prompt.title.en = "Enable Containerization"
+_prompt.title.zh = "启用容器化运行"
+_prompt.description.en = "Choose whether to run the frontend in Docker/Docker Compose containers. If enabled, a Dockerfile will be generated, and Nginx will be used internally to serve the application."
+_prompt.description.zh = "选择是否在 Docker/Docker Compose 容器中运行前端。如果启用，将生成 Dockerfile 并使用 Nginx 在容器内部署服务。"
+_prompt.type = "confirm"
+
+[container.type]
+value = "docker-compose"
+_prompt.title.en = "Container Type"
+_prompt.title.zh = "容器类型"
+_prompt.description.en = "Select 'Docker' to generate only a Dockerfile. Select 'Docker Compose' to generate an additional docker-compose.yml file."
+_prompt.description.zh = "选择 'Docker' 将仅生成 Dockerfile。选择 'Docker Compose' 则会额外生成 docker-compose.yml 文件。"
+_prompt.type = "select"
+_prompt.options = [
+    { value = "docker", label.en = "Docker", label.zh = "Docker" },
+    { value = "docker-compose", label.en = "Docker Compose", label.zh = "Docker Compose" },
+]
+
+[container.name]
+value = "scan-frontend"
+_prompt.title.en = "Container Name"
+_prompt.title.zh = "容器名称"
+_prompt.description.en = "Name for the Docker container or service (if using Docker Compose)."
+_prompt.description.zh = "Docker 容器/服务（如果使用 Docker Compose）的名称。"
+_prompt.type = "input"
+
+
+[container.tag]
+value = "latest"
+_prompt.title.en = "Container Image Tag"
+_prompt.title.zh = "容器镜像标签"
+_prompt.description.en = "Tag for the Docker image (e.g., 'latest', 'v1.0.0')."
+_prompt.description.zh = "Docker 镜像的标签（例如：“latest”、“v1.0.0”）。"
+_prompt.type = "input"
+
+
+[container.core_space.port]
+value = 8000
+_prompt.title.en = "Core Space Container Host Port"
+_prompt.title.zh = "Core Space 容器主机端口"
+_prompt.description.en = "Host port mapping for the Core Space service container. This is the port on your machine that maps to the container's internal Nginx port."
+_prompt.description.zh = "Core Space 服务容器的主机映射端口。这是您宿主机上映射到容器内部 Nginx 服务端口的端口。"
+_prompt.type = "input"
+
+[container.e_space.port]
+value = 8001
+_prompt.title.en = "eSpace Container Host Port"
+_prompt.title.zh = "eSpace 容器主机端口"
+_prompt.description.en = "Host port mapping for the eSpace service container. This is the port on your machine that maps to the container's internal Nginx port."
+_prompt.description.zh = "eSpace 服务容器的主机映射端口。这是您宿主机上映射到容器内部 Nginx 服务端口的端口。"
+_prompt.type = "input"
+
+[proxy.core_space.port]
+value = 3000
+_prompt.title.en = "Core Space Nginx Service Port (Internal)"
+_prompt.title.zh = "Core Space Nginx 服务端口 (容器内)"
+_prompt.description.en = "Internal port used by the Core Space Nginx service inside the container. Ensure this port does not conflict if also using eSpace Nginx internally."
+_prompt.description.zh = "Core Space Nginx 服务在容器内部使用的端口。如果同时启用两个 Space，请确保此端口号与 eSpace 的 Nginx 内部端口不冲突。"
+_prompt.type = "input"
+
+
+[proxy.e_space]
+[proxy.e_space.port]
+value = 3001
+_prompt.title.en = "eSpace Nginx Service Port (Internal)"
+_prompt.title.zh = "eSpace Nginx 服务端口 (容器内)"
+_prompt.description.en = "Internal port for the eSpace Nginx service inside the container. Ensure this port does not conflict if also using Core Space Nginx internally."
+_prompt.description.zh = "eSpace Nginx 服务在容器内部使用的端口。如果同时启用两个 Space，请确保此端口号与 Core Space 的 Nginx 内部端口不冲突。"
+_prompt.type = "input"
