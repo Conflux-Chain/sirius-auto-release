@@ -8,11 +8,9 @@ import (
 	"Conflux-Chain/sirius-auto-release/internal/interactive"
 	"Conflux-Chain/sirius-auto-release/internal/utils"
 	"fmt"
-	"strings"
 
 	"github.com/pelletier/go-toml/v2"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var outputConfigFile string
@@ -34,16 +32,8 @@ var initCmd = &cobra.Command{
 			return
 		}
 
-		v := viper.New()
-		v.SetConfigType("toml")
-
-		if err := v.ReadConfig(strings.NewReader(config.DefaultESpaceTheme)); err != nil {
-			utils.ShowFailure(fmt.Sprintf("Failed to read default theme config: %v", err))
-			return
-		}
-
 		var themeConfig config.ThemeConfig
-		if err := v.Unmarshal(&themeConfig); err != nil {
+		if err := toml.Unmarshal([]byte(config.DefaultESpaceTheme), &themeConfig); err != nil {
 			utils.ShowFailure(fmt.Sprintf("Failed to unmarshal theme config: %v", err))
 			return
 		}
@@ -63,8 +53,6 @@ var initCmd = &cobra.Command{
 			utils.ShowFailure(fmt.Sprintf("Failed to write config to file: %v", err))
 			return
 		}
-
-		fmt.Printf("todo %v", useConfig)
 	},
 }
 
