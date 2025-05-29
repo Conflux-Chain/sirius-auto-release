@@ -1,0 +1,189 @@
+# Config version
+[global]
+# The version of this configuration file.
+version = 1
+# Specifies the active space(s) for which frontend(s) to configure and/or build:
+# "core": Only Core Space frontend.
+# "eSpace": Only eSpace frontend.
+# "all": Both Core Space and eSpace frontends.
+space = "all"
+# The output directory for generated files (like Dockerfile, Nginx configs) and frontend build artifacts.
+workdir = "./frontend"
+
+# Proxy settings, used if `container.enabled = true` to configure an Nginx proxy within the container(s).
+[proxy]
+# Specifies the proxy server type. Currently, "nginx" is the primary supported type.
+type = "nginx"
+
+# Proxy configuration for Core Space (if `proxy.enabled = true`).
+[proxy.core_space]
+# The backend API URL that the Nginx proxy will forward Core Space requests to.
+# This is the actual backend endpoint for Core Space data.
+api_url = "https://testnet.confluxscan.io"
+# The internal port on which the Nginx service for Core Space will listen *inside the container*.
+# This port is then mapped to a host port via `container.core_space.port`.
+port = 3000
+
+# Proxy configuration for eSpace (if `proxy.enabled = true`).
+[proxy.e_space]
+# The backend API URL that the Nginx proxy will forward eSpace requests to.
+# This is the actual backend endpoint for eSpace data.
+api_url = "https://evmtestnet.confluxscan.org"
+# The internal port on which the Nginx service for eSpace will listen *inside the container*.
+# This port is then mapped to a host port via `container.e_space.port`.
+port = 3001
+
+# Settings for running the frontend(s) in a container (Docker/Docker Compose).
+[container]
+# Set to true to enable containerization. If true, a Dockerfile (and optionally
+# docker-compose.yml) will be generated. Nginx (if `proxy.enabled = true`) will be used internally.
+enabled = true
+# Specifies the container tooling:
+#   "docker": Generates only a Dockerfile.
+#   "docker-compose": Generates a Dockerfile and a docker-compose.yml file.
+type = "docker-compose" # Example: "docker-compose"
+# Name for the Docker container or service (if using Docker Compose).
+name = "scan-frontend"
+# Tag for the Docker image (e.g., "latest", "v1.0.0").
+tag = "latest"
+
+[container.core_space]
+# Host port mapping for the Core Space service container.
+# This is the port on your host machine that maps to the internal Nginx service port
+# for Core Space (defined in `proxy.core_space.port`).
+port = 8000
+
+[container.e_space]
+# Host port mapping for the eSpace service container.
+# This is the port on your host machine that maps to the internal Nginx service port
+# for eSpace (defined in `proxy.e_space.port`).
+port = 8001
+
+# Frontend application settings
+[frontend]
+# Specifies the frontend type:
+#   "prebuilt": Uses pre-downloaded frontend files from `prebuilt_repo`.
+type = "prebuilt"
+
+prebuilt_repo = "https://github.com/Conflux-Chain/sirius-auto-release.git"
+
+# Custom frontend settings specific to Core Space.
+# These settings are typically injected as environment variables into the frontend build.
+[frontend.core_space_settings]
+# Backend service URL that the Core Space frontend application will target for API requests.
+api_url = "https://testnet.confluxscan.io"
+# Core Space Open API request address.
+ENV_OPEN_API_HOST = "https://api-testnet.confluxscan.net"
+# Core Space RPC request address.
+ENV_RPC_SERVER = "https://test.confluxrpc.com"
+# The Network ID corresponding to this Scan instance for Core Space.
+ENV_NETWORK_ID = 1
+# Defines the network type, used by the frontend to distinguish between Core and EVM spaces if needed.
+ENV_NETWORK_TYPE = "CORE"
+# The chain environment corresponding to this Scan instance (e.g., MAINNET, TESTNET, DEVNET).
+ENV_CHAIN_TYPE = "DEVNET"
+# FC Contract Address (Optional, leave blank if FC functionality is not supported).
+ENV_FC_ADDRESS = "cfxtest:achteu1f777f1j1s8s4tvsx5vk5vcbrn4ykxa0fzg1"
+# FC Exchange Contract Address (Optional, leave blank if not supported).
+ENV_FC_EXCHANGE_ADDRESS = "cfxtest:acf6wwargxpp9ddfe7rnagf2ty9gsxs54uptst589y"
+# FC Exchange Interest Contract Address (Optional, leave blank if not supported).
+ENV_FC_EXCHANGE_INTEREST_ADDRESS = "cfxtest:acadrvdd07u69hazg0nkjkpdetvyc5wma6put8949d"
+# ENS Registry Contract Address (Optional, leave blank if not supported).
+ENV_ENS_REGISTRY_ADDRESS = "cfxtest:acemru7fu1u8brtyn3hrtae17kbcd4pd9u2m761bta"
+# ENS Public Resolver Contract Address (Optional, leave blank if not supported).
+ENV_ENS_PUBLIC_RESOLVER_ADDRESS = "cfxtest:acbfyf69zaxau5a23w10dgyrmb0hrz4p9pewn6sejp"
+# URL for the logo image to be displayed in the Core Space frontend.
+ENV_LOGO = "https://testnet.confluxscan.net/static/media/logo-testnet.135b93ff.svg"
+
+# Custom frontend settings specific to eSpace.
+# These settings are typically injected as environment variables into the frontend build.
+[frontend.e_space_settings]
+# Backend service URL that the eSpace frontend application will target for API requests.
+api_url = "https://evmtestnet.confluxscan.org"
+# eSpace Open API request address.
+ENV_API_HOST = "https://evmapi-testnet.confluxscan.net"
+# Core Space Open API Host (Optional). Used by eSpace frontend to request Core Space data if needed.
+ENV_CORE_API_HOST = "https://api-testnet.confluxscan.net"
+# Core Space Scan Host URL (Optional). Used for linking from eSpace to Core Space pages.
+ENV_CORE_SCAN_HOST = "https://testnet.confluxscan.net"
+# eSpace RPC request address.
+ENV_RPC_SERVER = "https://evmtestnet-cfxbridge.confluxrpc.com"
+# The Network ID corresponding to this Scan instance for eSpace.
+ENV_NETWORK_ID = 71
+# Defines the network type, used by the frontend to distinguish between Core and EVM spaces.
+ENV_NETWORK_TYPE = "EVM"
+# The chain environment corresponding to this Scan instance (e.g., MAINNET, TESTNET, DEVNET).
+ENV_CHAIN_TYPE = "DEVNET"
+# URL for the logo image to be displayed in the eSpace frontend.
+ENV_LOGO = "https://evmtestnet.confluxscan.net/static/media/logo-testnet.6a5c7ce7.svg"
+
+# Configuration for the "Add to Wallet" feature (e.g., for MetaMask) in the eSpace frontend.
+[frontend.e_space_settings.ENV_WALLET_CONFIG]
+# Chain ID for wallet configuration.
+chainId = 71
+# Chain name for wallet configuration.
+chainName = "eSpace Testnet"
+# RPC URLs for wallet configuration (array format).
+rpcUrls = ["https://evmtestnet.confluxrpc.com"]
+# Block explorer URLs for wallet configuration (array format).
+blockExplorerUrls = ["https://evmtestnet.confluxscan.org"]
+# Native currency details for wallet configuration.
+[frontend.e_space_settings.ENV_WALLET_CONFIG.nativeCurrency]
+# Name of the native currency (e.g., Conflux).
+name = "Conflux"
+# Symbol of the native currency (e.g., CFX).
+symbol = "CFX"
+# Decimals of the native currency (e.g., 18).
+decimals = 18
+
+
+# Custom theme settings for the eSpace frontend.
+# These values override default theme colors. See internal/config/defaultESpaceTheme.toml for defaults.
+[frontend.e_space_settings.ENV_THEME]
+primary = "#17B38A"
+antdPrimaryButtonBg = "#7789D3"
+buttonBg = "rgba(0, 84, 254, 0.8)"
+outlineColor = "#7789D3"
+shadowColor = "rgba(30, 61, 228, 0.2)"
+searchButtonBg = "#AFE9D2"
+searchButtonHoverBg = "#17B38A"
+gasPriceLineBg = "#F0F4F3"
+footerBg = "#05343F"
+footerHighLightColor = "#AFE9D2"
+linkColor = "#1e3de4"
+linkHoverColor = "#0f23bd"
+chartColors = [
+    "#7cb5ec",
+    "#434348",
+    "#f7a35c",
+    "#2b908f",
+    "#91e8e1",
+    "#90ed7d",
+    "#8085e9",
+    "#f15c80",
+    "#e4d354",
+    "#f45b5b",
+]
+mixedChartColors = ["#7cb5ec", "#90ed7d", "#434348"]
+pieChartColors = [
+    "#7cb5ec",
+    "#434348",
+    "#f7a35c",
+    "#2b908f",
+    "#91e8e1",
+    "#90ed7d",
+    "#8085e9",
+    "#f15c80",
+    "#e4d354",
+    "#f45b5b",
+]
+chartTitleColor = "#7789D3"
+chartDetailLinkColor = "#1e3de4"
+
+# Custom icon paths/URLs for the eSpace frontend.
+[frontend.e_space_settings.ENV_ICONS]
+imgArrow = "/static/media/arrow.4e79d439.svg"
+
+[frontend.e_space_settings.ENV_LOCALES_EN]
+
+[frontend.e_space_settings.ENV_LOCALES_CN]
