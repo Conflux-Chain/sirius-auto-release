@@ -7,7 +7,7 @@ version = 1
 # "core": Only Core Space frontend will be configured and/or built.
 # "eSpace": Only eSpace frontend will be configured and/or built.
 # "all": Both Core Space and eSpace frontends will be configured and/or built.
-space = "all"
+space = "core"
 
 # The output directory for generated files and frontend build artifacts.
 workdir = "./frontend"
@@ -27,13 +27,16 @@ prebuilt_repo = "https://github.com/Conflux-Chain/sirius-auto-release.git"
 # If containerization with Nginx proxy is enabled (see [container] and [proxy] sections),
 # this URL is typically the upstream target for the Nginx proxy.
 api_url = "https://testnet.confluxscan.io"
-
-[frontend.e_space_settings]
-# Backend service URL for eSpace.
-# The frontend application will make requests (e.g., to /v1, /stat) to this URL.
-# If containerization with Nginx proxy is enabled (see [container] and [proxy] sections),
-# this URL is typically the upstream target for the Nginx proxy.
-api_url = "https://evmtestnet.confluxscan.org"
+# Core Space Open API request address.
+ENV_OPEN_API_HOST = "https://api-testnet.confluxscan.net"
+# Core Space RPC request address.
+ENV_RPC_SERVER = "https://test.confluxrpc.com"
+# The Network ID corresponding to this Scan instance for Core Space.
+ENV_NETWORK_ID = 1
+# Defines the network type, used by the frontend to distinguish between Core and EVM spaces if needed.
+ENV_NETWORK_TYPE = "CORE"
+# The chain environment corresponding to this Scan instance (e.g., MAINNET, TESTNET, DEVNET).
+ENV_CHAIN_TYPE = "DEVNET"
 
 
 # Settings for running the frontend in a container (Docker/Docker Compose).
@@ -57,31 +60,11 @@ tag = "latest"
 # Nginx service port (defined in `proxy.core_space.port`).
 port = 8000
 
-[container.e_space]
-# Host port mapping for the eSpace service container.
-# This is the port on your host machine that maps to the container's internal
-# Nginx service port (defined in `proxy.e_space.port`).
-port = 8001
-
-
 # Proxy settings, primarily used when `container.enabled = true`.
 # Nginx within the container(s) will use these settings to proxy frontend API requests.
 [proxy]
-
 # Proxy configuration for Core Space (when container.enabled = true).
 [proxy.core_space]
-# Target backend API URL for the Core Space Nginx proxy.
-# Requests received by the Nginx service (listening internally on `proxy.core_space.port`)
-# will be forwarded to this `api_url`. This often matches `frontend.core_space_settings.api_url`.
-api_url = "https://testnet.confluxscan.io"
 # Internal port inside the container where the Nginx service for Core Space will listen.
 # Ensure this port does not conflict with `proxy.e_space.port` if both are used.
 port = 3000
-
-# Proxy configuration for eSpace (when container.enabled = true).
-[proxy.e_space]
-# Internal port inside the container where the Nginx service for eSpace will listen.
-# Ensure this port does not conflict with `proxy.core_space.port` if both are used.
-# Note: `api_url` is not specified here for eSpace proxy. The Nginx configuration
-# for eSpace will likely use `frontend.e_space_settings.api_url` as its upstream target.
-port = 3001
