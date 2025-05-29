@@ -38,7 +38,7 @@ var initCmd = &cobra.Command{
 			return
 		}
 
-		if (cfg.Global.Space == config.ALL_SPACE || cfg.Global.Space == config.E_SPACE) && cfg.Frontend.ESpaceSettings.Enabled {
+		if cfg.Global.Space == config.ALL_SPACE || cfg.Global.Space == config.E_SPACE {
 			cfg.Frontend.ESpaceSettings.EnvTheme = themeConfig
 		}
 

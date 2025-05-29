@@ -9,7 +9,7 @@ value = "eSpace"
 _prompt.title.en = "Space to Use"
 _prompt.title.zh = "选择使用的 Space"
 _prompt.description.en = "Select the Space to use for the frontend (Core Space or Ethereum-compatible eSpace)."
-_prompt.description.zh = "选择前端要使用的 Space (核心空间或以太坊兼容空间)。"
+_prompt.description.zh = "选择前端要使用的 Space (Core Space 或 ESpace)。"
 _prompt.type = "select"
 _prompt.options = [
     { value = "core", label.en = "Core Space", label.zh = "Core Space" },
@@ -75,14 +75,6 @@ _prompt.description.en = "Backend service URL for Core Space. Endpoints like /v1
 _prompt.description.zh = "Core Space 后端服务地址。需要从此地址请求 /v1、/stat 等接口。如果启用 Docker，Nginx 将在内部代理这些请求。"
 _prompt.type = "input"
 
-
-[frontend.core_space_settings.enable]
-value = true
-_prompt.title.en = "Enable Core Space Setting"
-_prompt.title.zh = "启用 Core Space 设置"
-_prompt.description.en = "Enable custom settings for Core Space"
-_prompt.description.zh = "是否启用 Core Space 的自定义设置"
-_prompt.type = "confirm"
 
 [frontend.core_space_settings.ENV_OPEN_API_HOST]
 value = "https://api-testnet.confluxscan.net"
@@ -186,13 +178,6 @@ _prompt.description.en = "Backend API URL for eSpace. Endpoints like /v1, /stat 
 _prompt.description.zh = "eSpace 后端服务地址。需要从此地址请求 /v1、/stat 等接口。如果启用 Docker，Nginx 将在内部代理这些请求。"
 _prompt.type = "input"
 
-[frontend.e_space_settings.enable]
-value = true
-_prompt.title.en = "Enable ESpace Setting"
-_prompt.title.zh = "启用  ESpace 设置"
-_prompt.description.en = "Enable custom settings for ESpace"
-_prompt.description.zh = "是否启用 ESpace 的自定义设置"
-_prompt.type = "confirm"
 
 [frontend.e_space_settings.ENV_API_HOST]
 value = "https://evmapi-testnet.confluxscan.net"
@@ -320,7 +305,7 @@ _prompt.type = "input"
 
 
 [frontend.e_space_settings.ENV_WALLET_CONFIG.nativeCurrency.decimals]
-value = "18"
+value = 18
 _prompt.title.en = "Native Currency Decimals (for Wallet)"
 _prompt.title.zh = "原生代币精度 (钱包)"
 _prompt.description.en = "Decimals of the native currency (e.g., 18) for wallet configuration."

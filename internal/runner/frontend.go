@@ -30,17 +30,17 @@ func (g *GitHubReleaseAsset) WriteSettingsToFile(cfg *config.Frontend, globalCon
 
 	switch {
 	case globalConfig.Space == config.ALL_SPACE:
-		if dirName == config.CORE_SPACE_DIR && cfg.CoreSpaceSettings.Enabled {
+		if dirName == config.CORE_SPACE_DIR {
 			injectSettings = true
 			injectData = cfg.CoreSpaceSettings
-		} else if dirName == config.E_SPACE_DIR && cfg.ESpaceSettings.Enabled {
+		} else if dirName == config.E_SPACE_DIR {
 			injectSettings = true
 			injectData = cfg.ESpaceSettings
 		}
-	case globalConfig.Space == config.CORE_SPACE && cfg.CoreSpaceSettings.Enabled && dirName == config.CORE_SPACE_DIR:
+	case globalConfig.Space == config.CORE_SPACE && dirName == config.CORE_SPACE_DIR:
 		injectSettings = true
 		injectData = cfg.CoreSpaceSettings
-	case globalConfig.Space == config.E_SPACE && cfg.ESpaceSettings.Enabled && dirName == config.E_SPACE_DIR:
+	case globalConfig.Space == config.E_SPACE && dirName == config.E_SPACE_DIR:
 		injectSettings = true
 		injectData = cfg.ESpaceSettings
 	}

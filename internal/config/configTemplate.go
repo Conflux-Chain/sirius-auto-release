@@ -38,7 +38,6 @@ type IconsConfig struct {
 
 type CoreSpaceSettings struct {
 	API_URL                      string `toml:"api_url" `
-	Enabled                      bool   `toml:"enabled,omitempty" json:"-"`
 	EnvOpenApiHost               string `toml:"ENV_OPEN_API_HOST,omitempty" `
 	EnvRpcServer                 string `toml:"ENV_RPC_SERVER,omitempty"`
 	EnvNetworkID                 int    `toml:"ENV_NETWORK_ID,omitempty"`
@@ -54,7 +53,6 @@ type CoreSpaceSettings struct {
 
 type ESpaceSettings struct {
 	API_URL         string            `toml:"api_url" huh_en:"Please input a proxy API URL"`
-	Enabled         bool              `toml:"enabled,omitempty" json:"-"`
 	EnvApiHost      string            `toml:"ENV_API_HOST,omitempty"`
 	EnvCoreApiHost  string            `toml:"ENV_CORE_API_HOST,omitempty"`
 	EnvCoreScanHost string            `toml:"ENV_CORE_SCAN_HOST,omitempty"`
@@ -112,6 +110,6 @@ type Container struct {
 type Config struct {
 	Global    Global    `toml:"global"`
 	Frontend  Frontend  `toml:"frontend"`
-	Proxy     Proxy     `toml:"proxy"`
 	Container Container `toml:"container"`
+	Proxy     Proxy     `toml:"proxy"`
 }

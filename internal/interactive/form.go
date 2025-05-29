@@ -2,26 +2,36 @@ package interactive
 
 import (
 	"Conflux-Chain/sirius-auto-release/internal/config"
-	"Conflux-Chain/sirius-auto-release/internal/i18n"
-	"Conflux-Chain/sirius-auto-release/internal/utils"
 	"fmt"
-	"strconv"
+	"strings"
 
 	"github.com/charmbracelet/huh"
 )
 
-func runGlobalForm(cfg *config.Global, language string) error {
+func runGlobalForm(cfg *config.Global, DataGlobal config.DataGlobalConfig, language string) error {
 
 	cfg.Workdir = "./frontend"
+
+	var globalFields []huh.Field
+
+	cfg.Space = config.ALL_SPACE
+
+	SpaceField, err := CreateHuhField("Space", &DataGlobal.Space.Prompt, &cfg.Space, language)
+	if err != nil {
+		return fmt.Errorf("failed to create field for Space: %w", err)
+	}
+	globalFields = append(globalFields, SpaceField)
+
+	cfg.Workdir = "./frontend"
+	WorkdirField, err := CreateHuhField("Workdir", &DataGlobal.Workdir.Prompt, &cfg.Workdir, language)
+	if err != nil {
+		return fmt.Errorf("failed to create field for Workdir: %w", err)
+	}
+	globalFields = append(globalFields, WorkdirField)
+
 	form := huh.NewForm(
 		huh.NewGroup(
-			huh.NewSelect[string]().Title(i18n.T(language, "config.global.space")).Options(
-				huh.NewOption(config.CORE_SPACE, config.CORE_SPACE),
-				huh.NewOption(config.E_SPACE, config.E_SPACE),
-				huh.NewOption(config.ALL_SPACE, config.ALL_SPACE),
-			).Value(&cfg.Space),
-
-			huh.NewInput().Title(i18n.T(language, "config.global.workdir")).Value(&cfg.Workdir).Placeholder("./frontend"),
+			globalFields...,
 		),
 	)
 
@@ -29,216 +39,324 @@ func runGlobalForm(cfg *config.Global, language string) error {
 
 }
 
-func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, language string) error {
+func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, DataFrontend config.DataFrontendConfig, language string) error {
 
+	cfg.Type = "prebuilt"
 	cfg.PrebuiltRepo = "https://github.com/Conflux-Chain/sirius-auto-release.git"
+
+	if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.CORE_SPACE {
+		cfg.CoreSpaceSettings.EnvNetworkType = "CORE"
+
+		coreFields := []huh.Field{}
+
+		API_URL_FIELD, err := CreateHuhField("API_URL", &DataFrontend.CoreSpaceSettings.API_URL.Prompt, &cfg.CoreSpaceSettings.API_URL, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for CoreSpace API URL: %w", err)
+		}
+		coreFields = append(coreFields, API_URL_FIELD)
+
+		ENV_OPEN_API_HOST_FIELD, err := CreateHuhField("ENV_OPEN_API_HOST", &DataFrontend.CoreSpaceSettings.EnvOpenApiHost.Prompt, &cfg.CoreSpaceSettings.EnvOpenApiHost, language)
+
+		if err != nil {
+			return fmt.Errorf("failed to create field for CoreSpace ENV_OPEN_API_HOST: %w", err)
+		}
+		coreFields = append(coreFields, ENV_OPEN_API_HOST_FIELD)
+
+		EnvRpcServerField, err := CreateHuhField("ENV_RPC_SERVER", &DataFrontend.CoreSpaceSettings.EnvRpcServer.Prompt, &cfg.CoreSpaceSettings.EnvRpcServer, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for CoreSpace ENV_RPC_SERVER: %w", err)
+		}
+		coreFields = append(coreFields, EnvRpcServerField)
+
+		EnvNetworkIDField, err := CreateHuhField("ENV_NETWORK_ID", &DataFrontend.CoreSpaceSettings.EnvNetworkID.Prompt, &cfg.CoreSpaceSettings.EnvNetworkID, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for CoreSpace ENV_NETWORK_ID: %w", err)
+		}
+		coreFields = append(coreFields, EnvNetworkIDField)
+
+		EnvChainTypeField, err := CreateHuhField("ENV_CHAIN_TYPE", &DataFrontend.CoreSpaceSettings.EnvChainType.Prompt, &cfg.CoreSpaceSettings.EnvChainType, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for CoreSpace ENV_CHAIN_TYPE: %w", err)
+		}
+		coreFields = append(coreFields, EnvChainTypeField)
+
+		EnvFcAddressField, err := CreateHuhField("ENV_FC_ADDRESS", &DataFrontend.CoreSpaceSettings.EnvFcAddress.Prompt, &cfg.CoreSpaceSettings.EnvFcAddress, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for CoreSpace ENV_FC_ADDRESS: %w", err)
+		}
+		coreFields = append(coreFields, EnvFcAddressField)
+
+		EnvFcExchangeAddressField, err := CreateHuhField("ENV_FC_EXCHANGE_ADDRESS", &DataFrontend.CoreSpaceSettings.EnvFcExchangeAddress.Prompt, &cfg.CoreSpaceSettings.EnvFcExchangeAddress, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for CoreSpace ENV_FC_EXCHANGE_ADDRESS: %w", err)
+		}
+		coreFields = append(coreFields, EnvFcExchangeAddressField)
+
+		EnvFcExchangeInterestAddressField, err := CreateHuhField("ENV_FC_EXCHANGE_INTEREST_ADDRESS", &DataFrontend.CoreSpaceSettings.EnvFcExchangeInterestAddress.Prompt, &cfg.CoreSpaceSettings.EnvFcExchangeInterestAddress, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for CoreSpace ENV_FC_EXCHANGE_INTEREST_ADDRESS: %w", err)
+		}
+
+		coreFields = append(coreFields, EnvFcExchangeInterestAddressField)
+
+		EnvEnsRegistryAddressField, err := CreateHuhField("ENV_ENS_REGISTRY_ADDRESS", &DataFrontend.CoreSpaceSettings.EnvEnsRegistryAddress.Prompt, &cfg.CoreSpaceSettings.EnvEnsRegistryAddress, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for CoreSpace ENV_ENS_REGISTRY_ADDRESS: %w", err)
+		}
+		coreFields = append(coreFields, EnvEnsRegistryAddressField)
+
+		EnvEnsPublicResolverAddressField, err := CreateHuhField("ENV_ENS_PUBLIC_RESOLVER_ADDRESS", &DataFrontend.CoreSpaceSettings.EnvEnsPublicResolverAddress.Prompt, &cfg.CoreSpaceSettings.EnvEnsPublicResolverAddress, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for CoreSpace ENV_ENS_PUBLIC_RESOLVER_ADDRESS: %w", err)
+		}
+		coreFields = append(coreFields, EnvEnsPublicResolverAddressField)
+
+		EnvLogoField, err := CreateHuhField("ENV_LOGO", &DataFrontend.CoreSpaceSettings.EnvLogo.Prompt, &cfg.CoreSpaceSettings.EnvLogo, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for CoreSpace ENV_LOGO: %w", err)
+		}
+		coreFields = append(coreFields, EnvLogoField)
+
+		if err := huh.NewForm(
+			huh.NewGroup(coreFields...),
+		).Run(); err != nil {
+			return err
+		}
+	}
+	if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.E_SPACE {
+
+		var eSpaceFields []huh.Field
+		cfg.ESpaceSettings.EnvNetworkType = "EVM"
+
+		API_URL_FIELD, err := CreateHuhField("API_URL", &DataFrontend.ESpaceSettings.API_URL.Prompt, &cfg.ESpaceSettings.API_URL, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for ESpace API URL: %w", err)
+		}
+
+		eSpaceFields = append(eSpaceFields, API_URL_FIELD)
+
+		EnvApiHostField, err := CreateHuhField("ENV_API_HOST", &DataFrontend.ESpaceSettings.EnvApiHost.Prompt, &cfg.ESpaceSettings.EnvApiHost, language)
+
+		if err != nil {
+			return fmt.Errorf("failed to create field for ESpace ENV_API_HOST: %w", err)
+		}
+		eSpaceFields = append(eSpaceFields, EnvApiHostField)
+
+		EnvCoreApiHostField, err := CreateHuhField("ENV_CORE_API_HOST", &DataFrontend.ESpaceSettings.EnvCoreApiHost.Prompt, &cfg.ESpaceSettings.EnvCoreApiHost, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for ESpace ENV_CORE_API_HOST: %w", err)
+		}
+
+		eSpaceFields = append(eSpaceFields, EnvCoreApiHostField)
+
+		EnvCoreScanHostField, err := CreateHuhField("ENV_CORE_SCAN_HOST", &DataFrontend.ESpaceSettings.EnvCoreScanHost.Prompt, &cfg.ESpaceSettings.EnvCoreScanHost, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for ESpace ENV_CORE_SCAN_HOST: %w", err)
+		}
+		eSpaceFields = append(eSpaceFields, EnvCoreScanHostField)
+
+		EnvRpcServerField, err := CreateHuhField("ENV_RPC_SERVER", &DataFrontend.ESpaceSettings.EnvRpcServer.Prompt, &cfg.ESpaceSettings.EnvRpcServer, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for ESpace ENV_RPC_SERVER: %w", err)
+		}
+		eSpaceFields = append(eSpaceFields, EnvRpcServerField)
+
+		EnvNetworkIDField, err := CreateHuhField("ENV_NETWORK_ID", &DataFrontend.ESpaceSettings.EnvNetworkID.Prompt, &cfg.ESpaceSettings.EnvNetworkID, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for ESpace ENV_NETWORK_ID: %w", err)
+		}
+		eSpaceFields = append(eSpaceFields, EnvNetworkIDField)
+
+		EnvChainTypeField, err := CreateHuhField("ENV_CHAIN_TYPE", &DataFrontend.ESpaceSettings.EnvChainType.Prompt, &cfg.ESpaceSettings.EnvChainType, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for ESpace ENV_CHAIN_TYPE: %w", err)
+		}
+		eSpaceFields = append(eSpaceFields, EnvChainTypeField)
+
+		EnvLogoField, err := CreateHuhField("ENV_LOGO", &DataFrontend.ESpaceSettings.EnvLogo.Prompt, &cfg.ESpaceSettings.EnvLogo, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for ESpace ENV_LOGO: %w", err)
+		}
+		eSpaceFields = append(eSpaceFields, EnvLogoField)
+
+		formErr := huh.NewForm(
+			huh.NewGroup(
+				eSpaceFields...,
+			),
+		).Run()
+
+		if formErr != nil {
+			return formErr
+		}
+
+		enableWalletConfig := false
+
+		EnvWalletConfigEnabledField, err := CreateHuhField("ENV_WALLET_CONFIG_ENABLE", &DataFrontend.ESpaceSettings.EnvWalletConfig.Enable.Prompt, &enableWalletConfig, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for ESpace ENV_WALLET_CONFIG_ENABLE: %w", err)
+		}
+		if err := EnvWalletConfigEnabledField.Run(); err != nil {
+			return err
+		}
+
+		if enableWalletConfig {
+
+			var walletConfigFields []huh.Field
+
+			rpcUrls := ""
+			blockExplorerUrls := ""
+			chainIDField, err := CreateHuhField("ENV_WALLET_CONFIG_CHAIN_ID", &DataFrontend.ESpaceSettings.EnvWalletConfig.ChainID.Prompt, &cfg.ESpaceSettings.EnvWalletConfig.ChainID, language)
+			if err != nil {
+				return fmt.Errorf("failed to create field for ESpace ENV_WALLET_CONFIG_CHAIN_ID: %w", err)
+			}
+
+			walletConfigFields = append(walletConfigFields, chainIDField)
+
+			chainNameField, err := CreateHuhField("ENV_WALLET_CONFIG_CHAIN_NAME", &DataFrontend.ESpaceSettings.EnvWalletConfig.ChainName.Prompt, &cfg.ESpaceSettings.EnvWalletConfig.ChainName, language)
+			if err != nil {
+				return fmt.Errorf("failed to create field for ESpace ENV_WALLET_CONFIG_CHAIN_NAME: %w", err)
+			}
+			walletConfigFields = append(walletConfigFields, chainNameField)
+
+			rpcUrlsField, err := CreateHuhField("ENV_WALLET_CONFIG_RPC_URLS", &DataFrontend.ESpaceSettings.EnvWalletConfig.RpcUrls.Prompt, &rpcUrls, language)
+			if err != nil {
+				return fmt.Errorf("failed to create field for ESpace ENV_WALLET_CONFIG_RPC_URLS: %w", err)
+			}
+			walletConfigFields = append(walletConfigFields, rpcUrlsField)
+
+			blockExplorerUrlsField, err := CreateHuhField("ENV_WALLET_CONFIG_BLOCK_EXPLORER_URLS", &DataFrontend.ESpaceSettings.EnvWalletConfig.BlockExplorerUrls.Prompt, &blockExplorerUrls, language)
+			if err != nil {
+				return fmt.Errorf("failed to create field for ESpace ENV_WALLET_CONFIG_BLOCK_EXPLORER_URLS: %w", err)
+			}
+			walletConfigFields = append(walletConfigFields, blockExplorerUrlsField)
+
+			nativeCurrencyNameField, err := CreateHuhField("ENV_WALLET_CONFIG_NATIVE_CURRENCY_NAME", &DataFrontend.ESpaceSettings.EnvWalletConfig.NativeCurrency.Name.Prompt, &cfg.ESpaceSettings.EnvWalletConfig.NativeCurrency.Name, language)
+			if err != nil {
+				return fmt.Errorf("failed to create field for ESpace ENV_WALLET_CONFIG_NATIVE_CURRENCY_NAME: %w", err)
+			}
+			walletConfigFields = append(walletConfigFields, nativeCurrencyNameField)
+
+			symbolField, err := CreateHuhField("ENV_WALLET_CONFIG_NATIVE_CURRENCY_SYMBOL", &DataFrontend.ESpaceSettings.EnvWalletConfig.NativeCurrency.Symbol.Prompt, &cfg.ESpaceSettings.EnvWalletConfig.NativeCurrency.Symbol, language)
+			if err != nil {
+				return fmt.Errorf("failed to create field for ESpace ENV_WALLET_CONFIG_NATIVE_CURRENCY_SYMBOL: %w", err)
+			}
+			walletConfigFields = append(walletConfigFields, symbolField)
+
+			decimalsField, err := CreateHuhField("ENV_WALLET_CONFIG_NATIVE_CURRENCY_DECIMALS", &DataFrontend.ESpaceSettings.EnvWalletConfig.NativeCurrency.Decimals.Prompt, &cfg.ESpaceSettings.EnvWalletConfig.NativeCurrency.Decimals, language)
+			if err != nil {
+				return fmt.Errorf("failed to create field for ESpace ENV_WALLET_CONFIG_NATIVE_CURRENCY_DECIMALS: %w", err)
+			}
+			walletConfigFields = append(walletConfigFields, decimalsField)
+			if err := huh.NewForm(
+				huh.NewGroup(
+					walletConfigFields...,
+				),
+			).Run(); err != nil {
+				return err
+			}
+
+			cfg.ESpaceSettings.EnvWalletConfig.RpcUrls = strings.Split(rpcUrls, ",")
+			cfg.ESpaceSettings.EnvWalletConfig.BlockExplorerUrls = strings.Split(blockExplorerUrls, ",")
+
+		}
+
+	}
+
+	return nil
+
+}
+
+func runProxyForm(cfg *config.Proxy, globalConfig *config.Global, dataConfig config.DataProxyConfig, language string) error {
+
+	cfg.Type = "nginx"
+
+	var proxyFields []huh.Field
+
+	if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.CORE_SPACE {
+
+		coreSpacePortField, err := CreateHuhField("CoreSpacePort", &dataConfig.CoreSpace.Port.Prompt, &cfg.CoreSpace.Port, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for Proxy CoreSpacePort: %w", err)
+		}
+		proxyFields = append(proxyFields, coreSpacePortField)
+
+	}
+
+	if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.E_SPACE {
+		eSpacePortField, err := CreateHuhField("ESpacePort", &dataConfig.ESpace.Port.Prompt, &cfg.ESpace.Port, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for Proxy ESpacePort: %w", err)
+		}
+		proxyFields = append(proxyFields, eSpacePortField)
+	}
+
 	if err := huh.NewForm(
 		huh.NewGroup(
-			huh.NewSelect[string]().Title(i18n.T(language, "Config.Frontend.Type")).Options(
-				huh.NewOption("prebuilt", "prebuilt"),
-			).Value(&cfg.Type),
-			huh.NewInput().Title(i18n.T(language, "Config.Frontend.PrebuiltRepo")).Value(&cfg.PrebuiltRepo).Placeholder("https://github.com/Conflux-Chain/sirius-auto-release.git"),
+			proxyFields...,
 		),
 	).Run(); err != nil {
 		return err
 	}
 
-	var apiUrls []huh.Field
-	if globalConfig.Space == config.ALL_SPACE {
-		apiUrls = append(apiUrls,
-			huh.NewInput().Title(i18n.T(language, "Config.Proxy.CoreSpace.API_URL")).Value(&cfg.CoreSpaceSettings.API_URL),
-			huh.NewInput().Title(i18n.T(language, "Config.Proxy.ESpace.API_URL")).Value(&cfg.ESpaceSettings.API_URL),
-		)
-	} else if globalConfig.Space == config.CORE_SPACE {
-		apiUrls = append(apiUrls,
-			huh.NewInput().Title(i18n.T(language, "Config.Proxy.CoreSpace.API_URL")).Value(&cfg.CoreSpaceSettings.API_URL),
-		)
-	} else if globalConfig.Space == config.E_SPACE {
-		apiUrls = append(apiUrls,
-			huh.NewInput().Title(i18n.T(language, "Config.Proxy.ESpace.API_URL")).Value(&cfg.ESpaceSettings.API_URL),
-		)
-	}
-
-	if err := huh.NewForm(huh.NewGroup(apiUrls...)).Run(); err != nil {
-		return err
-	}
-
-	if err := huh.NewConfirm().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.Enabled")).Value(&cfg.CoreSpaceSettings.Enabled).Run(); err != nil {
-		return err
-	}
-
-	if (globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.CORE_SPACE) && cfg.CoreSpaceSettings.Enabled {
-
-		networkId := ""
-		if err := huh.NewForm(
-			huh.NewGroup(
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvOpenApiHost")).Value(&cfg.CoreSpaceSettings.EnvOpenApiHost),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvRpcServer")).Value(&cfg.CoreSpaceSettings.EnvRpcServer),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvNetworkID")).Value(&networkId).Validate(func(s string) error {
-					if s == "" {
-						return fmt.Errorf("networkId cannot be empty")
-					}
-					if _, err := strconv.Atoi(s); err != nil {
-						return fmt.Errorf("networkId must be a number")
-					}
-
-					return nil
-				}),
-
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvNetworkType")).Value(&cfg.CoreSpaceSettings.EnvNetworkType),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvChainType")).Value(&cfg.CoreSpaceSettings.EnvChainType),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvFcAddress")).Value(&cfg.CoreSpaceSettings.EnvFcAddress),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvFcExchangeAddress")).Value(&cfg.CoreSpaceSettings.EnvFcExchangeAddress),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvFcExchangeInterestAddress")).Value(&cfg.CoreSpaceSettings.EnvFcExchangeInterestAddress),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvEnsRegistryAddress")).Value(&cfg.CoreSpaceSettings.EnvEnsRegistryAddress),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvEnsPublicResolverAddress")).Value(&cfg.CoreSpaceSettings.EnvEnsPublicResolverAddress),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.CoreSpaceSettings.EnvLogo")).Value(&cfg.CoreSpaceSettings.EnvLogo),
-			),
-		).Run(); err != nil {
-			return err
-		}
-
-		// network id is already validated
-		netId, _ := strconv.Atoi(networkId)
-		cfg.CoreSpaceSettings.EnvNetworkID = netId
-
-	}
-
-	if err := huh.NewConfirm().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.Enabled")).Value(&cfg.ESpaceSettings.Enabled).Run(); err != nil {
-		return err
-	}
-
-	if (globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.E_SPACE) && cfg.ESpaceSettings.Enabled {
-
-		networkId := ""
-		if err := huh.NewForm(
-			huh.NewGroup(
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvApiHost")).Value(&cfg.ESpaceSettings.EnvApiHost),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvCoreApiHost")).Value(&cfg.ESpaceSettings.EnvCoreApiHost),
-
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvCoreScanHost")).Value(&cfg.ESpaceSettings.EnvCoreScanHost),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvRpcServer")).Value(&cfg.ESpaceSettings.EnvRpcServer),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvNetworkID")).Value(&networkId).Validate(utils.ValidateNumber("networkId")),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvChainType")).Value(&cfg.ESpaceSettings.EnvChainType),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvLogo")).Value(&cfg.ESpaceSettings.EnvLogo),
-			),
-		).Run(); err != nil {
-			return err
-		}
-
-		netId, _ := strconv.Atoi(networkId)
-		cfg.ESpaceSettings.EnvNetworkID = netId
-
-		chainId := ""
-
-		rpcUrl := ""
-		blockExplorerUrl := ""
-
-		decimals := "18"
-		if err := huh.NewForm(
-			huh.NewGroup(
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.ChainID")).Value(&chainId).Validate(utils.ValidateNumber("chainId")),
-
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.ChainName")).Value(&cfg.ESpaceSettings.EnvWalletConfig.ChainName),
-
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.RpcUrls")).Value(&rpcUrl),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.BlockExplorerUrls")).Value(&blockExplorerUrl),
-
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.NativeCurrency.Name")).Value(&cfg.ESpaceSettings.EnvWalletConfig.NativeCurrency.Name),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.NativeCurrency.Symbol")).Value(&cfg.ESpaceSettings.EnvWalletConfig.NativeCurrency.Symbol),
-				huh.NewInput().Title(i18n.T(language, "Config.Frontend.ESpaceSettings.EnvWalletConfig.NativeCurrency.Decimals")).Value(&decimals).Validate(utils.ValidateNumber("decimals")).Placeholder("18"),
-			),
-		).Run(); err != nil {
-			return err
-		}
-
-		chainIdInt, _ := strconv.Atoi(chainId)
-		cfg.ESpaceSettings.EnvWalletConfig.ChainID = chainIdInt
-		cfg.ESpaceSettings.EnvWalletConfig.RpcUrls = []string{rpcUrl}
-		cfg.ESpaceSettings.EnvWalletConfig.BlockExplorerUrls = []string{blockExplorerUrl}
-		decimalsInt, _ := strconv.Atoi(decimals)
-		cfg.ESpaceSettings.EnvWalletConfig.NativeCurrency.Decimals = decimalsInt
-
-	}
-
 	return nil
 }
 
-func runProxyForm(cfg *config.Proxy, globalConfig *config.Global, language string) error {
+func runContainerForm(cfg *config.Container, globalConfig *config.Global, dataConfig config.DataContainerConfig, language string) error {
 
-	cfg.Type = "nginx"
-
-	if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.CORE_SPACE {
-
-		port := ""
-		if err := huh.NewForm(
-			huh.NewGroup(
-				huh.NewInput().Title(i18n.T(language, "Config.Proxy.CoreSpace.Port")).Value(&port).Validate(utils.ValidateNumber("port")),
-			),
-		).Run(); err != nil {
-			return err
-		}
-		portInt, _ := strconv.Atoi(port)
-		cfg.CoreSpace.Port = portInt
+	enableField, err := CreateHuhField("Enabled", &dataConfig.Enabled.Prompt, &cfg.Enabled, language)
+	if err != nil {
+		return fmt.Errorf("failed to create field for Container Enabled: %w", err)
 	}
-
-	if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.E_SPACE {
-		port := ""
-		if err := huh.NewForm(
-			huh.NewGroup(
-				huh.NewInput().Title(i18n.T(language, "Config.Proxy.ESpace.Port")).Value(&port).Validate(utils.ValidateNumber("port")),
-			),
-		).Run(); err != nil {
-			return err
-		}
-
-		portInt, _ := strconv.Atoi(port)
-		cfg.ESpace.Port = portInt
-	}
-
-	return nil
-}
-
-func runContainerForm(cfg *config.Container, globalConfig *config.Global, language string) error {
-
-	if err := huh.NewConfirm().Title(i18n.T(language, "Config.Container.Enabled")).Value(&cfg.Enabled).Run(); err != nil {
+	if err := enableField.Run(); err != nil {
 		return err
 	}
 
 	if cfg.Enabled {
-		cfg.Type = "docker"
 
-		if err := huh.NewInput().Title(i18n.T(language, "Config.Container.Name")).Value(&cfg.Name).Run(); err != nil {
-			return err
-		}
+		var containerFields []huh.Field
 
-		if err := huh.NewInput().Title(i18n.T(language, "Config.Container.Tag")).Value(&cfg.Tag).Run(); err != nil {
-			return err
+		typeField, err := CreateHuhField("Type", &dataConfig.Type.Prompt, &cfg.Type, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for Container Type: %w", err)
 		}
+		containerFields = append(containerFields, typeField)
+
+		nameField, err := CreateHuhField("Name", &dataConfig.Name.Prompt, &cfg.Name, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for Container Name: %w", err)
+		}
+		containerFields = append(containerFields, nameField)
+
+		tagField, err := CreateHuhField("Tag", &dataConfig.Tag.Prompt, &cfg.Tag, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for Container Tag: %w", err)
+		}
+		containerFields = append(containerFields, tagField)
 
 		if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.CORE_SPACE {
 
-			port := ""
-			if err := huh.NewInput().Title(fmt.Sprintf("%s %s", i18n.T(language, "Config.Container.CoreSpace"), i18n.T(language, "Config.Container.CoreSpace.Port"))).Value(&port).Validate(utils.ValidateNumber("port")).Run(); err != nil {
-				return err
+			coreSpacePortField, err := CreateHuhField("CoreSpacePort", &dataConfig.CoreSpace.Port.Prompt, &cfg.CoreSpace.Port, language)
+			if err != nil {
+				return fmt.Errorf("failed to create field for Container CoreSpacePort: %w", err)
 			}
-
-			portInt, _ := strconv.Atoi(port)
-			cfg.CoreSpace.Port = portInt
+			containerFields = append(containerFields, coreSpacePortField)
 		}
 
 		if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.E_SPACE {
-
-			port := ""
-			if err := huh.NewInput().Title(fmt.Sprintf("%s %s", i18n.T(language, "Config.Container.ESpace"), i18n.T(language, "Config.Container.ESpace.Port"))).Value(&port).Validate(utils.ValidateNumber("port")).Run(); err != nil {
-				return err
+			eSpacePortField, err := CreateHuhField("ESpacePort", &dataConfig.ESpace.Port.Prompt, &cfg.ESpace.Port, language)
+			if err != nil {
+				return fmt.Errorf("failed to create field for Container ESpacePort: %w", err)
 			}
+			containerFields = append(containerFields, eSpacePortField)
+		}
 
-			portInt, _ := strconv.Atoi(port)
-			cfg.ESpace.Port = portInt
-
+		if err := huh.NewForm(
+			huh.NewGroup(
+				containerFields...,
+			),
+		).Run(); err != nil {
+			return err
 		}
 	}
-
 	return nil
 }

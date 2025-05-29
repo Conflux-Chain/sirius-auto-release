@@ -72,9 +72,6 @@ prebuilt_repo = "https://github.com/Conflux-Chain/sirius-auto-release.git"
 [frontend.core_space_settings]
 # Backend service URL that the Core Space frontend application will target for API requests.
 api_url = "https://testnet.confluxscan.io"
-
-# Enable/disable the generation and use of Core Space frontend.
-enabled = true
 # Core Space Open API request address.
 ENV_OPEN_API_HOST = "https://api-testnet.confluxscan.net"
 # Core Space RPC request address.
@@ -103,8 +100,6 @@ ENV_LOGO = "https://testnet.confluxscan.net/static/media/logo-testnet.135b93ff.s
 [frontend.e_space_settings]
 # Backend service URL that the eSpace frontend application will target for API requests.
 api_url = "https://evmtestnet.confluxscan.org"
-# Enable/disable the generation and use of eSpace frontend.
-enabled = true
 # eSpace Open API request address.
 ENV_API_HOST = "https://evmapi-testnet.confluxscan.net"
 # Core Space Open API Host (Optional). Used by eSpace frontend to request Core Space data if needed.

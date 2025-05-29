@@ -1,93 +1,102 @@
 package config
 
+type Label struct {
+	EN string `toml:"en"`
+	ZH string `toml:"zh"`
+}
+
 type PromptOption struct {
-	Value   string `toml:"value"`
-	LabelEN string `toml:"label.en"`
-	LabelZH string `toml:"label.zh"`
+	Value string `toml:"value"`
+	Label Label  `toml:"label"`
+}
+type Title struct {
+	EN string `toml:"en"`
+	ZH string `toml:"zh"`
+}
+
+type Description struct {
+	EN string `toml:"en"`
+	ZH string `toml:"zh"`
 }
 
 type PromptConfig struct {
-	TitleEN       string         `toml:"title.en"`
-	TitleZH       string         `toml:"title.zh"`
-	DescriptionEN string         `toml:"description.en,omitempty"`
-	DescriptionZH string         `toml:"description.zh,omitempty"`
-	Type          string         `toml:"type"`
-	Options       []PromptOption `toml:"options,omitempty"`
+	Title       Title          `toml:"title"`
+	Description Description    `toml:"description"`
+	Type        string         `toml:"type"`
+	Options     []PromptOption `toml:"options"`
 }
 
 type StringConfigItem struct {
 	Value  string       `toml:"value"`
-	Prompt PromptConfig `toml:"_prompt,omitempty"`
+	Prompt PromptConfig `toml:"_prompt"`
 }
 
 type IntConfigItem struct {
 	Value  int          `toml:"value"`
-	Prompt PromptConfig `toml:"_prompt,omitempty"`
+	Prompt PromptConfig `toml:"_prompt"`
 }
 
 type BoolConfigItem struct {
 	Value  bool         `toml:"value"`
-	Prompt PromptConfig `toml:"_prompt,omitempty"`
+	Prompt PromptConfig `toml:"_prompt"`
 }
 
 type StringSliceConfigItem struct {
 	Value  []string     `toml:"value"`
-	Prompt PromptConfig `toml:"_prompt,omitempty"`
+	Prompt PromptConfig `toml:"_prompt"`
 }
 
 type DataGlobalConfig struct {
-	Version int              `toml:"version"` // Direct value, no _prompt
+	Version int              `toml:"version"`
 	Space   StringConfigItem `toml:"space"`
 	Workdir StringConfigItem `toml:"workdir"`
 }
 
-type CoreSpaceSettingsConfig struct {
-	ApiURL                           StringConfigItem `toml:"api_url"`
-	Enable                           BoolConfigItem   `toml:"enable"`
-	ENV_OPEN_API_HOST                StringConfigItem `toml:"ENV_OPEN_API_HOST"`
-	ENV_RPC_SERVER                   StringConfigItem `toml:"ENV_RPC_SERVER"`
-	ENV_NETWORK_ID                   IntConfigItem    `toml:"ENV_NETWORK_ID"`
-	ENV_CHAIN_TYPE                   StringConfigItem `toml:"ENV_CHAIN_TYPE"`
-	ENV_FC_ADDRESS                   StringConfigItem `toml:"ENV_FC_ADDRESS"`
-	ENV_FC_EXCHANGE_ADDRESS          StringConfigItem `toml:"ENV_FC_EXCHANGE_ADDRESS"`
-	ENV_FC_EXCHANGE_INTEREST_ADDRESS StringConfigItem `toml:"ENV_FC_EXCHANGE_INTEREST_ADDRESS"`
-	ENV_ENS_REGISTRY_ADDRESS         StringConfigItem `toml:"ENV_ENS_REGISTRY_ADDRESS"`
-	ENV_ENS_PUBLIC_RESOLVER_ADDRESS  StringConfigItem `toml:"ENV_ENS_PUBLIC_RESOLVER_ADDRESS"`
-	ENV_LOGO                         StringConfigItem `toml:"ENV_LOGO"`
+type DataCoreSpaceSettingsConfig struct {
+	API_URL                      StringConfigItem `toml:"api_url"`
+	EnvOpenApiHost               StringConfigItem `toml:"ENV_OPEN_API_HOST"`
+	EnvRpcServer                 StringConfigItem `toml:"ENV_RPC_SERVER"`
+	EnvNetworkID                 IntConfigItem    `toml:"ENV_NETWORK_ID"`
+	EnvChainType                 StringConfigItem `toml:"ENV_CHAIN_TYPE"`
+	EnvFcAddress                 StringConfigItem `toml:"ENV_FC_ADDRESS"`
+	EnvFcExchangeAddress         StringConfigItem `toml:"ENV_FC_EXCHANGE_ADDRESS"`
+	EnvFcExchangeInterestAddress StringConfigItem `toml:"ENV_FC_EXCHANGE_INTEREST_ADDRESS"`
+	EnvEnsRegistryAddress        StringConfigItem `toml:"ENV_ENS_REGISTRY_ADDRESS"`
+	EnvEnsPublicResolverAddress  StringConfigItem `toml:"ENV_ENS_PUBLIC_RESOLVER_ADDRESS"`
+	EnvLogo                      StringConfigItem `toml:"ENV_LOGO"`
 }
-type NativeCurrencyConfig struct {
+type DataNativeCurrencyConfig struct {
 	Name     StringConfigItem `toml:"name"`
 	Symbol   StringConfigItem `toml:"symbol"`
 	Decimals IntConfigItem    `toml:"decimals"`
 }
 
-type ESpaceWalletConfig struct {
-	Enable            BoolConfigItem        `toml:"enable"`
-	ChainId           IntConfigItem         `toml:"chainId"`
-	ChainName         StringConfigItem      `toml:"chainName"`
-	RpcUrls           StringSliceConfigItem `toml:"rpcUrls"`
-	BlockExplorerUrls StringSliceConfigItem `toml:"blockExplorerUrls"`
-	NativeCurrency    NativeCurrencyConfig  `toml:"nativeCurrency"`
+type DataWalletConfig struct {
+	Enable            BoolConfigItem           `toml:"enable"`
+	ChainID           IntConfigItem            `toml:"chainId"`
+	ChainName         StringConfigItem         `toml:"chainName"`
+	RpcUrls           StringSliceConfigItem    `toml:"rpcUrls"`
+	BlockExplorerUrls StringSliceConfigItem    `toml:"blockExplorerUrls"`
+	NativeCurrency    DataNativeCurrencyConfig `toml:"nativeCurrency"`
 }
-type ESpaceSettingsConfig struct {
-	ApiURL             StringConfigItem   `toml:"api_url"`
-	Enable             BoolConfigItem     `toml:"enable"`
-	ENV_API_HOST       StringConfigItem   `toml:"ENV_API_HOST"`
-	ENV_CORE_API_HOST  StringConfigItem   `toml:"ENV_CORE_API_HOST"`
-	ENV_CORE_SCAN_HOST StringConfigItem   `toml:"ENV_CORE_SCAN_HOST"`
-	ENV_RPC_SERVER     StringConfigItem   `toml:"ENV_RPC_SERVER"`
-	ENV_NETWORK_ID     IntConfigItem      `toml:"ENV_NETWORK_ID"`
-	ENV_CHAIN_TYPE     StringConfigItem   `toml:"ENV_CHAIN_TYPE"`
-	ENV_LOGO           StringConfigItem   `toml:"ENV_LOGO"`
-	ENV_WALLET_CONFIG  ESpaceWalletConfig `toml:"ENV_WALLET_CONFIG"`
+type DataESpaceSettingsConfig struct {
+	API_URL         StringConfigItem `toml:"api_url"`
+	EnvApiHost      StringConfigItem `toml:"ENV_API_HOST"`
+	EnvCoreApiHost  StringConfigItem `toml:"ENV_CORE_API_HOST"`
+	EnvCoreScanHost StringConfigItem `toml:"ENV_CORE_SCAN_HOST"`
+	EnvRpcServer    StringConfigItem `toml:"ENV_RPC_SERVER"`
+	EnvNetworkID    IntConfigItem    `toml:"ENV_NETWORK_ID"`
+	EnvChainType    StringConfigItem `toml:"ENV_CHAIN_TYPE"`
+	EnvWalletConfig DataWalletConfig `toml:"ENV_WALLET_CONFIG"`
+	EnvLogo         StringConfigItem `toml:"ENV_LOGO"`
 }
 type DataFrontendConfig struct {
 	Type         StringConfigItem `toml:"type"`
 	PrebuiltRepo StringConfigItem `toml:"prebuilt_repo"`
-	// SiriusRepo        StringConfigItem      `toml:"sirius_repo,omitempty"` // Uncomment if needed
-	// SiriusEthRepo     StringConfigItem      `toml:"sirius_eth_repo,omitempty"` // Uncomment if needed
-	CoreSpaceSettings CoreSpaceSettingsConfig `toml:"core_space_settings"`
-	ESpaceSettings    ESpaceSettingsConfig    `toml:"e_space_settings"`
+	// SiriusRepo        StringConfigItem      `toml:"sirius_repo"` // Uncomment if needed
+	// SiriusEthRepo     StringConfigItem      `toml:"sirius_eth_repo"` // Uncomment if needed
+	CoreSpaceSettings DataCoreSpaceSettingsConfig `toml:"core_space_settings"`
+	ESpaceSettings    DataESpaceSettingsConfig    `toml:"e_space_settings"`
 }
 
 type ContainerSpacePortConfig struct {
