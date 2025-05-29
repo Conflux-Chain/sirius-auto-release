@@ -23,7 +23,6 @@ func CreateHuhField(fieldName string, promptMeta *config.PromptConfig, valueBind
 	if language == "zh" {
 		description = promptMeta.Description.ZH
 	}
-
 	switch promptMeta.Type {
 	case "input":
 		{
@@ -48,7 +47,6 @@ func CreateHuhField(fieldName string, promptMeta *config.PromptConfig, valueBind
 
 				}), nil
 			}
-
 			return huh.NewInput().Title(title).Description(description).Value(strPrt), nil
 		}
 
@@ -78,7 +76,7 @@ func CreateHuhField(fieldName string, promptMeta *config.PromptConfig, valueBind
 				if language == "zh" {
 					label = option.Label.ZH
 				}
-				options = append(options, huh.NewOption(option.Value, label))
+				options = append(options, huh.NewOption(label, option.Value))
 
 			}
 			return huh.NewSelect[string]().Title(title).Description(description).Options(options...).Value(strPtr), nil
