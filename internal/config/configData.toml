@@ -274,16 +274,16 @@ _prompt.type = "input"
 value = ["https://evmtestnet.confluxrpc.com"]
 _prompt.title.en = "RPC URLs (for Wallet)"
 _prompt.title.zh = "RPC 地址 (钱包)"
-_prompt.description.en = "RPC URLs for wallet configuration (array format). Example: [\"https://rpc.example.com\"]"
-_prompt.description.zh = "钱包配置中的 RPC URL (数组格式)。例如：[\"https://evmtestnet.confluxrpc.com\"]"
+_prompt.description.en = "RPC URLs for wallet configuration (array format). Example: https://rpc.example.com,https://rpc2.example.com"
+_prompt.description.zh = "钱包配置中的 RPC URL (数组格式)。例如：https://rpc.example.com,https://rpc2.example.com"
 _prompt.type = "input"
 
 [frontend.e_space_settings.ENV_WALLET_CONFIG.blockExplorerUrls]
 value = ["https://evmtestnet.confluxscan.org"]
 _prompt.title.en = "Block Explorer URLs (for Wallet)"
 _prompt.title.zh = "区块浏览器地址 (钱包)"
-_prompt.description.en = "Block explorer URLs for wallet configuration (array format). Example: [\"https://explorer.example.com\"]"
-_prompt.description.zh = "钱包配置中的区块浏览器 URL (数组格式)。例如：[\"https://evmtestnet.confluxscan.org\"]"
+_prompt.description.en = "Block explorer URLs for wallet configuration (array format). Example: https://explorer.example.com,https://explorer2.example.com"
+_prompt.description.zh = "钱包配置中的区块浏览器 URL (数组格式)。例如：https://explorer.example.com,https://explorer2.example.com"
 _prompt.type = "input"
 
 [frontend.e_space_settings.ENV_WALLET_CONFIG.nativeCurrency]

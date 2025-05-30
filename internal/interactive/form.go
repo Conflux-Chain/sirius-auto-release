@@ -142,19 +142,6 @@ func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, DataFron
 		}
 		eSpaceFields = append(eSpaceFields, EnvApiHostField)
 
-		EnvCoreApiHostField, err := CreateHuhField("ENV_CORE_API_HOST", &DataFrontend.ESpaceSettings.EnvCoreApiHost.Prompt, &cfg.ESpaceSettings.EnvCoreApiHost, language)
-		if err != nil {
-			return fmt.Errorf("failed to create field for ESpace ENV_CORE_API_HOST: %w", err)
-		}
-
-		eSpaceFields = append(eSpaceFields, EnvCoreApiHostField)
-
-		EnvCoreScanHostField, err := CreateHuhField("ENV_CORE_SCAN_HOST", &DataFrontend.ESpaceSettings.EnvCoreScanHost.Prompt, &cfg.ESpaceSettings.EnvCoreScanHost, language)
-		if err != nil {
-			return fmt.Errorf("failed to create field for ESpace ENV_CORE_SCAN_HOST: %w", err)
-		}
-		eSpaceFields = append(eSpaceFields, EnvCoreScanHostField)
-
 		EnvRpcServerField, err := CreateHuhField("ENV_RPC_SERVER", &DataFrontend.ESpaceSettings.EnvRpcServer.Prompt, &cfg.ESpaceSettings.EnvRpcServer, language)
 		if err != nil {
 			return fmt.Errorf("failed to create field for ESpace ENV_RPC_SERVER: %w", err)
@@ -178,6 +165,19 @@ func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, DataFron
 			return fmt.Errorf("failed to create field for ESpace ENV_LOGO: %w", err)
 		}
 		eSpaceFields = append(eSpaceFields, EnvLogoField)
+
+		EnvCoreApiHostField, err := CreateHuhField("ENV_CORE_API_HOST", &DataFrontend.ESpaceSettings.EnvCoreApiHost.Prompt, &cfg.ESpaceSettings.EnvCoreApiHost, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for ESpace ENV_CORE_API_HOST: %w", err)
+		}
+
+		eSpaceFields = append(eSpaceFields, EnvCoreApiHostField)
+
+		EnvCoreScanHostField, err := CreateHuhField("ENV_CORE_SCAN_HOST", &DataFrontend.ESpaceSettings.EnvCoreScanHost.Prompt, &cfg.ESpaceSettings.EnvCoreScanHost, language)
+		if err != nil {
+			return fmt.Errorf("failed to create field for ESpace ENV_CORE_SCAN_HOST: %w", err)
+		}
+		eSpaceFields = append(eSpaceFields, EnvCoreScanHostField)
 
 		formErr := huh.NewForm(
 			huh.NewGroup(

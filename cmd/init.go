@@ -32,14 +32,15 @@ var initCmd = &cobra.Command{
 			return
 		}
 
-		var themeConfig config.ThemeConfig
+		var themeConfig config.Config
+
 		if err := toml.Unmarshal([]byte(config.DefaultESpaceTheme), &themeConfig); err != nil {
 			utils.ShowFailure(fmt.Sprintf("Failed to unmarshal theme config: %v", err))
 			return
 		}
 
 		if cfg.Global.Space == config.ALL_SPACE || cfg.Global.Space == config.E_SPACE {
-			cfg.Frontend.ESpaceSettings.EnvTheme = themeConfig
+			cfg.Frontend.ESpaceSettings.EnvTheme = themeConfig.Frontend.ESpaceSettings.EnvTheme
 		}
 
 		path := "./config.toml"
@@ -53,6 +54,11 @@ var initCmd = &cobra.Command{
 			utils.ShowFailure(fmt.Sprintf("Failed to write config to file: %v", err))
 			return
 		}
+
+		utils.ShowSuccess(fmt.Sprintf("Configuration file generated successfully: %s", path))
+		utils.ShowCommandSuggestion("To use this configuration, run:")
+		utils.ShowCommand(fmt.Sprintf("sirius --config %s", path))
+
 	},
 }
 
