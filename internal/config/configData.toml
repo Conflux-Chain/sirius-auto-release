@@ -103,19 +103,6 @@ _prompt.description.zh = "此 Scan 实例对应的网络 ID。"
 _prompt.type = "input"
 
 
-[frontend.core_space_settings.ENV_CHAIN_TYPE]
-value = "TESTNET"
-_prompt.title.en = "Scan Environment"
-_prompt.title.zh = "Scan 环境"
-_prompt.description.en = "The chain environment corresponding to this Scan instance."
-_prompt.description.zh = "此 Scan 实例对应链的环境。"
-_prompt.type = "select"
-_prompt.options = [
-    { value = "MAINNET", label.en = "Mainnet", label.zh = "主网" },
-    { value = "TESTNET", label.en = "Testnet", label.zh = "测试网" },
-    { value = "DEVNET", label.en = "Devnet", label.zh = "开发网" },
-]
-
 [frontend.core_space_settings.ENV_FC_ADDRESS]
 value = "cfxtest:achteu1f777f1j1s8s4tvsx5vk5vcbrn4ykxa0fzg1"
 _prompt.title.en = "FC Contract Address (Optional)"

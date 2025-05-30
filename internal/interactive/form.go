@@ -46,6 +46,7 @@ func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, DataFron
 
 	if globalConfig.Space == config.ALL_SPACE || globalConfig.Space == config.CORE_SPACE {
 		cfg.CoreSpaceSettings.EnvNetworkType = "CORE"
+		cfg.CoreSpaceSettings.EnvChainType = "DEVNET"
 
 		coreFields := []huh.Field{}
 
@@ -73,12 +74,6 @@ func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, DataFron
 			return fmt.Errorf("failed to create field for CoreSpace ENV_NETWORK_ID: %w", err)
 		}
 		coreFields = append(coreFields, EnvNetworkIDField)
-
-		EnvChainTypeField, err := CreateHuhField("ENV_CHAIN_TYPE", &DataFrontend.CoreSpaceSettings.EnvChainType.Prompt, &cfg.CoreSpaceSettings.EnvChainType, language)
-		if err != nil {
-			return fmt.Errorf("failed to create field for CoreSpace ENV_CHAIN_TYPE: %w", err)
-		}
-		coreFields = append(coreFields, EnvChainTypeField)
 
 		EnvFcAddressField, err := CreateHuhField("ENV_FC_ADDRESS", &DataFrontend.CoreSpaceSettings.EnvFcAddress.Prompt, &cfg.CoreSpaceSettings.EnvFcAddress, language)
 		if err != nil {
@@ -127,6 +122,7 @@ func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, DataFron
 
 		var eSpaceFields []huh.Field
 		cfg.ESpaceSettings.EnvNetworkType = "EVM"
+		cfg.ESpaceSettings.EnvChainType = "DEVNET"
 
 		API_URL_FIELD, err := CreateHuhField("API_URL", &DataFrontend.ESpaceSettings.API_URL.Prompt, &cfg.ESpaceSettings.API_URL, language)
 		if err != nil {
@@ -153,12 +149,6 @@ func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, DataFron
 			return fmt.Errorf("failed to create field for ESpace ENV_NETWORK_ID: %w", err)
 		}
 		eSpaceFields = append(eSpaceFields, EnvNetworkIDField)
-
-		EnvChainTypeField, err := CreateHuhField("ENV_CHAIN_TYPE", &DataFrontend.ESpaceSettings.EnvChainType.Prompt, &cfg.ESpaceSettings.EnvChainType, language)
-		if err != nil {
-			return fmt.Errorf("failed to create field for ESpace ENV_CHAIN_TYPE: %w", err)
-		}
-		eSpaceFields = append(eSpaceFields, EnvChainTypeField)
 
 		EnvLogoField, err := CreateHuhField("ENV_LOGO", &DataFrontend.ESpaceSettings.EnvLogo.Prompt, &cfg.ESpaceSettings.EnvLogo, language)
 		if err != nil {
