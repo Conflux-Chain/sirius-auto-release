@@ -12,7 +12,7 @@ You can download the pre-build assets from [release](https://github.com/Conflux-
 
 Sirius CLI is a command-line tool designed to simplify the setup of the Conflux Scan frontend. It helps you download necessary components and generate the required configuration files.
 
-You can download from [release v0.0.1](https://github.com/Conflux-Chain/sirius-auto-release/releases/tag/v0.0.1).
+You can download from [release v0.0.2](https://github.com/Conflux-Chain/sirius-auto-release/releases/tag/v0.0.2).
 
 ### Usage
 
