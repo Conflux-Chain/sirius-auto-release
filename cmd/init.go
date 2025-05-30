@@ -32,17 +32,6 @@ var initCmd = &cobra.Command{
 			return
 		}
 
-		var themeConfig config.Config
-
-		if err := toml.Unmarshal([]byte(config.DefaultESpaceTheme), &themeConfig); err != nil {
-			utils.ShowFailure(fmt.Sprintf("Failed to unmarshal theme config: %v", err))
-			return
-		}
-
-		if cfg.Global.Space == config.ALL_SPACE || cfg.Global.Space == config.E_SPACE {
-			cfg.Frontend.ESpaceSettings.EnvTheme = themeConfig.Frontend.ESpaceSettings.EnvTheme
-		}
-
 		path := "./config.toml"
 		if outputConfigFile != "" {
 			path = outputConfigFile

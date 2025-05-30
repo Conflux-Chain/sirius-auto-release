@@ -16,8 +16,5 @@ var DockerTemplate string
 //go:embed docker-compose.template.yml
 var DockerComposeTemplate string
 
-//go:embed defaultESpaceTheme.toml
-var DefaultESpaceTheme string
-
 //go:embed configData.toml
 var ConfigDataEmbed string
