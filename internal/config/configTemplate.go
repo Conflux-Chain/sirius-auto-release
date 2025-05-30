@@ -27,7 +27,7 @@ type CoreSpaceSettings struct {
 }
 type ESpaceSettings struct {
 	API_URL         string       `toml:"api_url,omitempty" json:"-"`
-	EnvApiHost      string       `toml:"ENV_API_HOST,omitempty" json:"ENV_API_HOST,omitempty"`
+	EnvOpenApiHost  string       `toml:"ENV_OPEN_API_HOST,omitempty" json:"ENV_OPEN_API_HOST,omitempty"`
 	EnvCoreApiHost  string       `toml:"ENV_CORE_API_HOST,omitempty" json:"ENV_CORE_API_HOST,omitempty"`
 	EnvCoreScanHost string       `toml:"ENV_CORE_SCAN_HOST,omitempty" json:"ENV_CORE_SCAN_HOST,omitempty"`
 	EnvRpcServer    string       `toml:"ENV_RPC_SERVER,omitempty" json:"ENV_RPC_SERVER,omitempty"`

@@ -27,7 +27,7 @@ prebuilt_repo = "https://github.com/Conflux-Chain/sirius-auto-release.git"
 # this URL is typically the upstream target for the Nginx proxy.
 api_url = "https://evmtestnet.confluxscan.org"
 # eSpace Open API request address.
-ENV_API_HOST = "https://evmapi-testnet.confluxscan.net"
+ENV_OPEN_API_HOST = "https://evmapi-testnet.confluxscan.net"
 
 # Optional settings for Core Space.
 # If you want to include Core Space features, uncomment the following lines.

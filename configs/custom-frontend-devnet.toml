@@ -101,7 +101,7 @@ ENV_LOGO = "https://testnet.confluxscan.net/static/media/logo-testnet.135b93ff.s
 # Backend service URL that the eSpace frontend application will target for API requests.
 api_url = "https://evmtestnet.confluxscan.org"
 # eSpace Open API request address.
-ENV_API_HOST = "https://evmapi-testnet.confluxscan.net"
+ENV_OPEN_API_HOST = "https://evmapi-testnet.confluxscan.net"
 # Core Space Open API Host (Optional). Used by eSpace frontend to request Core Space data if needed.
 ENV_CORE_API_HOST = "https://api-testnet.confluxscan.net"
 # Core Space Scan Host URL (Optional). Used for linking from eSpace to Core Space pages.

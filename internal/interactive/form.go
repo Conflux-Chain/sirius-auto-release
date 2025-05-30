@@ -131,12 +131,12 @@ func runFrontendForm(cfg *config.Frontend, globalConfig *config.Global, DataFron
 
 		eSpaceFields = append(eSpaceFields, API_URL_FIELD)
 
-		EnvApiHostField, err := CreateHuhField("ENV_API_HOST", &DataFrontend.ESpaceSettings.EnvApiHost.Prompt, &cfg.ESpaceSettings.EnvApiHost, language)
+		EnvOpenApiHostField, err := CreateHuhField("ENV_OPEN_API_HOST", &DataFrontend.ESpaceSettings.EnvOpenApiHost.Prompt, &cfg.ESpaceSettings.EnvOpenApiHost, language)
 
 		if err != nil {
-			return fmt.Errorf("failed to create field for ESpace ENV_API_HOST: %w", err)
+			return fmt.Errorf("failed to create field for ESpace ENV_OPEN_API_HOST: %w", err)
 		}
-		eSpaceFields = append(eSpaceFields, EnvApiHostField)
+		eSpaceFields = append(eSpaceFields, EnvOpenApiHostField)
 
 		EnvRpcServerField, err := CreateHuhField("ENV_RPC_SERVER", &DataFrontend.ESpaceSettings.EnvRpcServer.Prompt, &cfg.ESpaceSettings.EnvRpcServer, language)
 		if err != nil {

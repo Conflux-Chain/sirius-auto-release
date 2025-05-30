@@ -166,7 +166,7 @@ _prompt.description.zh = "eSpace 后端服务地址。需要从此地址请求 /
 _prompt.type = "input"
 
 
-[frontend.e_space_settings.ENV_API_HOST]
+[frontend.e_space_settings.ENV_OPEN_API_HOST]
 value = "https://evmapi-testnet.confluxscan.net"
 _prompt.title.en = "eSpace Open API Host"
 _prompt.title.zh = "eSpace Open API 地址"

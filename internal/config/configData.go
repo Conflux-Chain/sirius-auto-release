@@ -81,7 +81,7 @@ type DataWalletConfig struct {
 }
 type DataESpaceSettingsConfig struct {
 	API_URL         StringConfigItem `toml:"api_url"`
-	EnvApiHost      StringConfigItem `toml:"ENV_API_HOST"`
+	EnvOpenApiHost  StringConfigItem `toml:"ENV_OPEN_API_HOST"`
 	EnvCoreApiHost  StringConfigItem `toml:"ENV_CORE_API_HOST"`
 	EnvCoreScanHost StringConfigItem `toml:"ENV_CORE_SCAN_HOST"`
 	EnvRpcServer    StringConfigItem `toml:"ENV_RPC_SERVER"`
