@@ -17,18 +17,12 @@ type = "nginx"
 
 # Proxy configuration for Core Space (if `proxy.enabled = true`).
 [proxy.core_space]
-# The backend API URL that the Nginx proxy will forward Core Space requests to.
-# This is the actual backend endpoint for Core Space data.
-api_url = "https://testnet.confluxscan.io"
 # The internal port on which the Nginx service for Core Space will listen *inside the container*.
 # This port is then mapped to a host port via `container.core_space.port`.
 port = 3000
 
 # Proxy configuration for eSpace (if `proxy.enabled = true`).
 [proxy.e_space]
-# The backend API URL that the Nginx proxy will forward eSpace requests to.
-# This is the actual backend endpoint for eSpace data.
-api_url = "https://evmtestnet.confluxscan.org"
 # The internal port on which the Nginx service for eSpace will listen *inside the container*.
 # This port is then mapped to a host port via `container.e_space.port`.
 port = 3001
